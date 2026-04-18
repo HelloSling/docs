@@ -1,0 +1,102 @@
+---
+title: "Get started with Sling: send your first message"
+sidebarTitle: "Quick Start"
+description: "Send your first SMS with Sling in under 5 minutes. Get your API token, register a sender ID, make your first request, and verify delivery."
+---
+
+This guide walks you through sending your first SMS message using the Sling API. You will get your API token, register a sender ID, make a single HTTP request, and confirm delivery — all in a few minutes.
+
+<Steps>
+  <Step title="Get your API token">
+    Log in to your dashboard and visit [Account → API](https://app.sling.com.ng/panel/account/api) to copy your API token. You will add this token to the `Authorization` header of every request.
+
+    If you need help with this step, see the [Authentication](/authentication) page for a detailed walkthrough.
+  </Step>
+
+  <Step title="Register a sender ID">
+    A sender ID is the name or number your recipients see as the message source. You must register one before sending.
+
+    Visit [Sender IDs](https://app.sling.com.ng/panel/sender-ids) in your dashboard to register a sender ID. Once approved, use that name as the `sender` value in your API requests.
+  </Step>
+
+  <Step title="Send your first SMS">
+    Make a `POST` request to `/send-sms` with your token, a recipient number, your message text, and your registered sender ID.
+
+    ```bash cURL
+    curl --request POST \
+      --url https://app.sling.com.ng/api/v1/send-sms \
+      --header "Accept: application/json" \
+      --header "Authorization: Bearer YOUR_API_TOKEN" \
+      --header "Content-Type: application/json" \
+      --data '{
+        "to": "2349123772222",
+        "message": "Hello, from Sling!",
+        "sender": "YourSenderID"
+      }'
+    ```
+
+    A successful request returns `200 OK` with the following response body:
+
+    ```json
+    {
+      "status": "success",
+      "status_delivery": "delivered",
+      "message_id": "2bajqzt5tw",
+      "sender": "YourSenderID",
+      "message": "Hello, from Sling!",
+      "recipient": "2349123772222",
+      "message_history": [],
+      "credit_used": 1
+    }
+    ```
+
+    Save the `message_id` value — you will need it to check delivery status.
+
+    <Note>
+      Each SMS consumes credit from your balance. The `credit_used` field in the response tells you how many credits were deducted. A standard single-page SMS costs 1 credit. Messages up to 3 pages are supported.
+    </Note>
+  </Step>
+
+  <Step title="Check message status">
+    Use your `message_id` to confirm delivery by calling the status endpoint:
+
+    ```bash cURL
+    curl --request GET \
+      --url https://app.sling.com.ng/api/v1/status/2bajqzt5tw \
+      --header "Accept: application/json" \
+      --header "Authorization: Bearer YOUR_API_TOKEN"
+    ```
+
+    A successful response looks like this:
+
+    ```json
+    {
+      "status": "success",
+      "status_delivery": "delivered",
+      "message_id": "2bajqzt5tw",
+      "credit_used": "1",
+      "sender": "YourSenderID",
+      "recipient": "2349123772222",
+      "message_history": []
+    }
+    ```
+
+    The `status_delivery` field confirms whether the message was delivered to the recipient's handset.
+  </Step>
+</Steps>
+
+## Next steps
+
+You have sent your first message. Explore the rest of the Sling API to add richer messaging to your application:
+
+<CardGroup cols={3}>
+  <Card title="Send SMS guide" icon="message-sms" href="/guides/send-sms">
+    Full parameter reference for SMS — groups, contacts, callbacks, and more.
+  </Card>
+  <Card title="Send RCS guide" icon="comment-dots" href="/guides/send-rcs">
+    Rich messages with cards, carousels, images, and interactive suggestions.
+  </Card>
+  <Card title="SMS API reference" icon="code" href="/api-reference/send-sms">
+    Complete endpoint spec for `POST /send-sms`.
+  </Card>
+</CardGroup>

@@ -1,0 +1,107 @@
+---
+title: "Receive delivery callbacks from Sling webhooks"
+sidebarTitle: "Callbacks"
+description: "Configure a callback URL to receive POST notifications when Sling delivers your SMS or Truecaller messages. Includes payload reference and best practices."
+---
+
+Callbacks (also called webhooks) let your server receive an automatic notification when Sling finishes delivering a message. Instead of polling the status endpoint repeatedly, you provide a URL and Sling calls it for you the moment delivery status changes. This is the recommended approach for building reliable, event-driven messaging workflows.
+
+## How callbacks work
+
+When you include a `callback` URL in a send request, Sling makes a `POST` request to that URL after the message is processed. Your endpoint should:
+
+1. Accept `POST` requests with a JSON body.
+2. Return an HTTP `200 OK` response promptly to acknowledge receipt.
+3. Perform any heavy processing asynchronously after acknowledging.
+
+If your endpoint does not return `200 OK`, Sling may treat the notification as undelivered.
+
+## Setting a callback URL
+
+Pass your endpoint URL in the `callback` field of any `send-sms` or `send-truecaller` request.
+
+### SMS with a callback
+
+```bash
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/send-sms \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer {API_TOKEN}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "to": "2349012345678",
+    "message": "Your order has shipped.",
+    "sender": "YourBrand",
+    "type": "transactional",
+    "callback": "https://your-server.example.com/sling/callback"
+  }'
+```
+
+### Truecaller with a callback
+
+```bash
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/send-truecaller \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer {API_TOKEN}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "to": "2349012345678",
+    "message": "Your order has shipped.",
+    "sender": "YourBrand",
+    "type": "transactional",
+    "callback": "https://your-server.example.com/sling/callback",
+    "instant": false
+  }'
+```
+
+## Callback payload
+
+When Sling calls your endpoint, it sends a `POST` request with a JSON body. The payload mirrors the fields returned in the original send response:
+
+```json
+{
+  "status": "success",
+  "status_delivery": "delivered",
+  "message_id": "2bajqzt5tw",
+  "sender": "YourBrand",
+  "message": "Your order has shipped.",
+  "recipient": "2349012345678",
+  "credit_used": 1
+}
+```
+
+| Field | Description |
+| --- | --- |
+| `status` | Overall request status — `success` or `fail`. |
+| `status_delivery` | Delivery outcome, e.g. `delivered`. |
+| `message_id` | The same ID returned in the original send response. Use this to match the callback to your original request. |
+| `sender` | The sender ID used to deliver the message. |
+| `message` | The message content that was sent. |
+| `recipient` | The phone number that received the message. |
+| `credit_used` | Number of credits deducted for this message. |
+
+## Tips
+
+<Tip>
+  Your callback URL must be publicly accessible on the internet. Sling cannot reach endpoints on `localhost` or private networks. Use a service like ngrok during local development to expose a local port to the web.
+</Tip>
+
+<Tip>
+  Return `200 OK` as quickly as possible. If your handler performs database writes or downstream API calls, do that work in a background job after acknowledging the callback.
+</Tip>
+
+<Warning>
+  Do not rely solely on callbacks for critical delivery confirmation. If your server is temporarily unavailable when Sling fires the callback, you may miss the notification. Use the `GET /status/{message_id}` endpoint as a fallback to verify delivery status on demand.
+</Warning>
+
+## Truecaller: synchronous vs. asynchronous delivery
+
+<Note>
+  For Truecaller messages, the `instant` parameter affects when — and whether — a callback is sent:
+
+  - **`instant: true`** — Sling processes delivery synchronously and returns the outcome directly in the API response. No callback is fired.
+  - **`instant: false`** — Sling queues the message and fires your `callback` URL when delivery completes. This is the recommended mode when using callbacks.
+
+  See the [Send Truecaller guide](/guides/send-truecaller) for full parameter details.
+</Note>

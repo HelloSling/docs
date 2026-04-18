@@ -1,0 +1,140 @@
+---
+title: "Send SMS messages with Sling to any recipient"
+sidebarTitle: "Send SMS"
+description: "Learn how to send transactional and promotional SMS to individual recipients, contact lists, and groups using the Sling API. Covers all parameters and errors."
+---
+
+The Sling SMS API lets you send text messages to any Nigerian phone number using a registered sender ID. You can target a single recipient, a saved contact from your contact list, or an entire contact group — all through the same `POST /send-sms` endpoint.
+
+## Send to a single recipient
+
+To send a message to one phone number, include the `to`, `message`, and `sender` fields in your request body.
+
+```bash
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/send-sms \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer {API_TOKEN}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "to": "2349012345678",
+    "message": "Hello, from Sling!",
+    "sender": "YourBrand",
+    "type": "transactional"
+  }'
+```
+
+## Send to a contact group
+
+Pass the `group` parameter with a group ID from your dashboard to send the same message to every contact in that group. You can find group IDs at `https://app.sling.com.ng/panel/contact`.
+
+```bash
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/send-sms \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer {API_TOKEN}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "message": "Hello team!",
+    "sender": "YourBrand",
+    "group": "42"
+  }'
+```
+
+## Send to a contact list entry
+
+Pass the `contact` parameter with a contact ID to send to a specific saved contact. Contact IDs are available in your contact list at `https://app.sling.com.ng/panel/contact`.
+
+```bash
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/send-sms \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer {API_TOKEN}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "message": "Hi there!",
+    "sender": "YourBrand",
+    "contact": "7"
+  }'
+```
+
+## Parameters
+
+<ParamField body="to" type="string" required>
+  Recipient phone number. Accepts 11-digit local format (`08012345678`), country code format (`2348012345678`), or plus-prefix format (`+2348012345678`). Required unless `contact` or `group` is provided.
+</ParamField>
+
+<ParamField body="message" type="string" required>
+  The message text to deliver. Maximum of 3 SMS pages (approximately 480 characters).
+</ParamField>
+
+<ParamField body="sender" type="string" required>
+  Your registered sender ID. [Register a sender ID](https://app.sling.com.ng/panel/sender-ids) on your dashboard before use.
+</ParamField>
+
+<ParamField body="type" type="string">
+  Routing type for the sender ID. Accepted values: `transactional` or `promotional`. Defaults to your sender ID's default route when omitted.
+</ParamField>
+
+<ParamField body="callback" type="string">
+  A publicly accessible URL on your server. Sling will send a `POST` request to this URL when delivery status changes. See the [callbacks guide](/guides/callbacks) for payload details.
+</ParamField>
+
+<ParamField body="contact" type="string">
+  The ID of a contact from your Sling contact list. Use instead of `to` to target a saved contact.
+</ParamField>
+
+<ParamField body="group" type="string">
+  The ID of a contact group. Use instead of `to` to send the message to every contact in the group.
+</ParamField>
+
+## Responses
+
+### Success
+
+```json
+{
+  "status": "success",
+  "status_delivery": "delivered",
+  "message_id": "2bajqzt5tw",
+  "sender": "Sling",
+  "message": "Hello, from Sling",
+  "recipient": "2349123772222",
+  "message_history": [],
+  "credit_used": 1
+}
+```
+
+### Errors
+
+```json
+{
+  "status": "fail",
+  "credit_used": "0",
+  "details": "insufficient credit"
+}
+```
+
+```json
+{
+  "status": "fail",
+  "credit_used": "0",
+  "details": "The given data was invalid"
+}
+```
+
+## Tips
+
+<Tip>
+  **Phone number format** — Sling accepts three formats for the `to` field:
+
+  - 11-digit local format: `08012345678`
+  - Country code without plus: `2348012345678`
+  - Country code with plus: `+2348012345678`
+
+  All three formats resolve to the same recipient.
+</Tip>
+
+<Note>
+  Store the `message_id` from the success response if you need to check delivery status later using the `GET /status/{message_id}` endpoint.
+</Note>

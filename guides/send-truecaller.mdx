@@ -1,0 +1,133 @@
+---
+title: "Send Truecaller messages with Sling API"
+sidebarTitle: "Send Truecaller"
+description: "Deliver branded messages to Truecaller users in Nigeria using the Sling API. Learn all parameters, instant vs. async delivery modes, and callback setup."
+---
+
+The Sling Truecaller API lets you send branded messages directly to users through the Truecaller app in Nigeria. Messages appear under your registered sender name, giving recipients a verified, trusted experience. You can send to a single number, a saved contact, or an entire contact group, and choose between synchronous (instant) and asynchronous delivery modes.
+
+## Send a Truecaller message
+
+```bash
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/send-truecaller \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer {API_TOKEN}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "sender": "Brand",
+    "to": "08140363233",
+    "message": "Hello from Truecaller",
+    "type": "transactional",
+    "callback": "https://your-server.example.com/callback",
+    "instant": false
+  }'
+```
+
+## Parameters
+
+<ParamField body="to" type="string" required>
+  Recipient phone number. Accepts 11-digit local format (`08012345678`), country code without plus (`2348012345678`), or with plus (`+2348012345678`). Required unless `contact` or `group` is provided.
+</ParamField>
+
+<ParamField body="message" type="string" required>
+  The message text to deliver. Maximum of 3 pages.
+</ParamField>
+
+<ParamField body="sender" type="string" required>
+  Your registered sender ID. [Register a sender ID](https://app.sling.com.ng/panel/sender-ids) on your dashboard before use.
+</ParamField>
+
+<ParamField body="type" type="string">
+  Routing type for the sender ID. Accepted values: `transactional` or `promotional`.
+</ParamField>
+
+<ParamField body="callback" type="string">
+  A publicly accessible URL on your server. Sling sends a `POST` request to this URL when the delivery status changes. Only used when `instant` is `false`. See the [callbacks guide](/guides/callbacks) for payload details.
+</ParamField>
+
+<ParamField body="instant" type="boolean">
+  Controls delivery mode. See the section below for the difference between `true` and `false`.
+</ParamField>
+
+<ParamField body="contact" type="string">
+  The ID of a saved contact from your Sling contact list. Use instead of `to`.
+</ParamField>
+
+<ParamField body="group" type="string">
+  The ID of a contact group. Sends the message to every contact in the group. Use instead of `to`.
+</ParamField>
+
+## Instant vs. async delivery
+
+The `instant` parameter controls whether Sling processes the message synchronously or queues it for background delivery.
+
+<Tabs>
+  <Tab title="instant: true">
+    Sling processes the message immediately and returns the result — success or failure — directly in the API response. Use this when you need to confirm delivery in real time before proceeding in your application logic.
+
+    ```json
+    {
+      "sender": "Brand",
+      "to": "08140363233",
+      "message": "Your OTP is 482910",
+      "type": "transactional",
+      "instant": true
+    }
+    ```
+
+    The response will include a `status` of `"success"` or a failure detail, allowing you to handle the outcome synchronously.
+  </Tab>
+
+  <Tab title="instant: false">
+    Sling queues the message for delivery and returns immediately with an accepted response. When delivery completes, Sling notifies your `callback` URL with the outcome. Use this for bulk sends or when you prefer event-driven delivery tracking.
+
+    ```json
+    {
+      "sender": "Brand",
+      "to": "08140363233",
+      "message": "Your order has shipped",
+      "type": "transactional",
+      "callback": "https://your-server.example.com/callback",
+      "instant": false
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Responses
+
+### Success
+
+```json
+{
+  "status": "success",
+  "message_id": "2bajqzt5tw",
+  "sender": "Sling",
+  "message": "Hello, from Sling",
+  "recipient": "2349123772222",
+  "credit_used": 1
+}
+```
+
+### Errors
+
+```json
+{
+  "status": "fail",
+  "credit_used": "0",
+  "details": "insufficient credit"
+}
+```
+
+```json
+{
+  "status": "fail",
+  "credit_used": "0",
+  "details": "The given data was invalid"
+}
+```
+
+<Note>
+  When `instant` is `false`, store the `message_id` from the response to correlate it with the callback payload your server receives when delivery completes.
+</Note>

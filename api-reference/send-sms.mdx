@@ -1,0 +1,159 @@
+---
+title: "POST /send-sms — Send SMS to any recipient"
+sidebarTitle: "Send SMS"
+description: "POST /api/v1/send-sms — Send an SMS to a phone number, contact ID, or group ID. Accepts to, message, sender, type, callback, contact, and group parameters."
+---
+
+Use this endpoint to send an SMS message to any Nigerian phone number. You can address a message directly to a phone number, or fan it out to a saved contact or an entire contact group. The API returns a `message_id` on success that you can use to poll delivery status later.
+
+## Endpoint
+
+```
+POST https://app.sling.com.ng/api/v1/send-sms
+```
+
+## Headers
+
+| Header          | Value                        |
+| --------------- | ---------------------------- |
+| `Accept`        | `application/json`           |
+| `Authorization` | `Bearer {API_TOKEN}`         |
+
+## Parameters
+
+<ParamField body="to" type="string" required>
+  The recipient's phone number. Accepts an 11-digit local format (e.g. `08140363541`), with country code (`2348140363541`), or with a `+` prefix (`+2348140363541`).
+</ParamField>
+
+<ParamField body="message" type="string" required>
+  The text content of the SMS. Maximum 3 pages (approximately 480 characters).
+</ParamField>
+
+<ParamField body="sender" type="string" required>
+  Your registered Sender ID. Must be registered on your dashboard before use. [Register a Sender ID](https://app.sling.com.ng/panel/sender-ids).
+</ParamField>
+
+<ParamField body="type" type="string">
+  The Sender ID route. Accepted values: `transactional` or `promotional`. Defaults to your Sender ID's configured route when omitted.
+</ParamField>
+
+<ParamField body="callback" type="string">
+  A URL on your server that Sling will POST delivery updates to. Must be a publicly accessible HTTPS endpoint.
+</ParamField>
+
+<ParamField body="contact" type="string">
+  The ID of a saved contact from your Sling contact list. Use instead of `to` to send to a stored contact. [View your contacts](https://app.sling.com.ng/panel/contact).
+</ParamField>
+
+<ParamField body="group" type="string">
+  The ID of a contact group. Use instead of `to` to broadcast to every contact in the group. [View your groups](https://app.sling.com.ng/panel/contact).
+</ParamField>
+
+## Request examples
+
+<CodeGroup>
+
+```bash cURL
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/send-sms \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "to": "08140363541",
+    "message": "Hello, from Sling",
+    "sender": "Sling",
+    "type": "transactional"
+  }'
+```
+
+```json JSON body
+{
+  "to": "08140363541",
+  "message": "Hello, from Sling",
+  "sender": "Sling",
+  "type": "transactional",
+  "callback": "https://your-server.example.com/webhook"
+}
+```
+
+</CodeGroup>
+
+### URL-based request
+
+You can also send via a plain GET-style URL by passing your token and parameters as query strings. This is useful for quick testing but the JSON body approach is recommended for production.
+
+```
+https://app.sling.com.ng/api/v1/send-sms?api_token=YOUR_API_TOKEN&to=08140363541&message=Hello&sender=Sling
+```
+
+## Responses
+
+### 200 — Success
+
+<ResponseField name="status" type="string">
+  Always `"success"` when the message was accepted.
+</ResponseField>
+
+<ResponseField name="status_delivery" type="string">
+  Current delivery state of the message, e.g. `"delivered"`, `"pending"`, or `"failed"`.
+</ResponseField>
+
+<ResponseField name="message_id" type="string">
+  Unique identifier for this message. Use it with the [Message Status](/api-reference/message-status) endpoint to track delivery.
+</ResponseField>
+
+<ResponseField name="sender" type="string">
+  The Sender ID used to deliver the message.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  The text content that was sent.
+</ResponseField>
+
+<ResponseField name="recipient" type="string">
+  The normalised E.164 phone number the message was delivered to.
+</ResponseField>
+
+<ResponseField name="message_history" type="array">
+  An array of prior delivery attempts for this message. Empty on first delivery.
+</ResponseField>
+
+<ResponseField name="credit_used" type="number">
+  Number of message credits deducted for this send.
+</ResponseField>
+
+```json 200 example
+{
+  "status": "success",
+  "status_delivery": "delivered",
+  "message_id": "2bajqzt5tw",
+  "sender": "Sling",
+  "message": "Hello, from Sling",
+  "recipient": "2349123772222",
+  "message_history": [],
+  "credit_used": 1
+}
+```
+
+### 400 — Error
+
+<CodeGroup>
+
+```json Insufficient credit
+{
+  "status": "fail",
+  "credit_used": "0",
+  "details": "insufficient credit"
+}
+```
+
+```json Incomplete parameters
+{
+  "status": "fail",
+  "credit_used": "0",
+  "details": "The given data was invalid"
+}
+```
+
+</CodeGroup>

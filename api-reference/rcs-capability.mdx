@@ -1,0 +1,97 @@
+---
+title: "GET /rcs/check-capability — Check RCS support"
+sidebarTitle: "RCS Capability"
+description: "GET /api/v1/rcs/check-capability/{phone} — Check whether a phone number is RCS-enabled. Returns rcs_enabled and a list of supported device capabilities."
+---
+
+Use this endpoint to verify whether a recipient's phone number is capable of receiving RCS messages before attempting delivery. The response tells you whether the device is RCS-enabled and lists which RCS capabilities it supports. Calling this endpoint before [Send RCS](/api-reference/send-rcs) lets you decide programmatically whether to send a rich message or fall back to SMS.
+
+## Endpoint
+
+```
+GET https://app.sling.com.ng/api/v1/rcs/check-capability/{phone}
+```
+
+## Headers
+
+| Header          | Value                |
+| --------------- | -------------------- |
+| `Accept`        | `application/json`   |
+| `Authorization` | `Bearer {API_TOKEN}` |
+
+## Path parameters
+
+<ParamField path="phone" type="string" required>
+  The phone number to check. Accepts an 11-digit local format (e.g. `08140363541`) or with country code (`2348140363541`).
+</ParamField>
+
+## Request example
+
+```bash cURL
+curl --request GET \
+  --url https://app.sling.com.ng/api/v1/rcs/check-capability/2348140363541 \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN'
+```
+
+## Responses
+
+### 200 — RCS enabled
+
+When the number supports RCS, `rcs_enabled` is `true` and the `capabilities` array lists the specific features available on the device.
+
+<ResponseField name="status" type="string">
+  Always `"success"` when the lookup completed.
+</ResponseField>
+
+<ResponseField name="rcs_enabled" type="boolean">
+  `true` when the phone number supports RCS.
+</ResponseField>
+
+<ResponseField name="details" type="string">
+  Additional context about the capability check result. Empty string when RCS is enabled.
+</ResponseField>
+
+<ResponseField name="capabilities" type="array">
+  List of RCS feature strings supported by the device. Possible values:
+
+  | Capability              | Description                                      |
+  | ----------------------- | ------------------------------------------------ |
+  | `chatBotCommunication`  | Device can interact with RCS chatbots.           |
+  | `geolocationPush`       | Device can receive and share location data.      |
+  | `callComposer`          | Device supports enhanced call features.          |
+  | `chat`                  | Device supports standard RCS chat messaging.     |
+  | `fileTransfer`          | Device can receive file attachments.             |
+</ResponseField>
+
+```json 200 — RCS enabled
+{
+  "status": "success",
+  "rcs_enabled": true,
+  "details": "",
+  "capabilities": [
+    "chatBotCommunication",
+    "geolocationPush",
+    "callComposer",
+    "chat",
+    "fileTransfer"
+  ]
+}
+```
+
+### 200 — RCS not enabled
+
+When the number does not support RCS, `rcs_enabled` is `false`, `capabilities` is an empty array, and `details` explains why.
+
+```json 200 — RCS not enabled
+{
+  "status": "success",
+  "rcs_enabled": false,
+  "details": "Number is rcs disabled or Bot is not launched with number's provider",
+  "capabilities": []
+}
+```
+
+<Tip>
+  When `rcs_enabled` is `false`, send your message via [Send SMS](/api-reference/send-sms) instead, or use [Send RCS](/api-reference/send-rcs) with `fallback_sms: true` to have Sling handle the fallback automatically.
+</Tip>

@@ -1,0 +1,154 @@
+---
+title: "Manage contacts and groups with the Sling API"
+sidebarTitle: "Contacts"
+description: "Create contact groups, import single or bulk contacts, and update contact details using the Sling Contacts API. Use contact and group IDs in your send requests."
+---
+
+The Sling Contacts API lets you organise recipients into named groups, import contacts individually or in bulk, and keep contact details up to date. Once contacts are saved, you can reference them by ID in your messaging requests — avoiding the need to pass raw phone numbers every time you send.
+
+All requests require the `Authorization: Bearer {API_TOKEN}` header.
+
+## List your groups
+
+Retrieve all contact groups on your account.
+
+```bash
+curl --request GET \
+  --url https://app.sling.com.ng/api/v1/groups \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer {API_TOKEN}'
+```
+
+## Get contacts in a group
+
+Retrieve all contacts belonging to a specific group. Replace `{groupid}` with the numeric ID of the group.
+
+```bash
+curl --request GET \
+  --url https://app.sling.com.ng/api/v1/group-contacts/{groupid} \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer {API_TOKEN}'
+```
+
+## Create a group
+
+Create a new contact group by providing a name.
+
+```bash
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/create-group \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer {API_TOKEN}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "Lagos Customers"
+  }'
+```
+
+### Parameters
+
+<ParamField body="name" type="string" required>
+  Display name for the new group.
+</ParamField>
+
+## Add a single contact
+
+Add one contact to your list. You can optionally assign them to an existing group at creation time.
+
+```bash
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/add-contact \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer {API_TOKEN}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "Amaka Obi",
+    "phone": "2348012345678",
+    "group_id": "42"
+  }'
+```
+
+### Parameters
+
+<ParamField body="name" type="string" required>
+  Full name of the contact.
+</ParamField>
+
+<ParamField body="phone" type="string" required>
+  Phone number of the contact. Accepts 11-digit local format, country code without plus, or with plus.
+</ParamField>
+
+<ParamField body="group_id" type="string">
+  ID of the group to assign this contact to. Omit to save the contact without a group.
+</ParamField>
+
+## Add multiple contacts
+
+Import a batch of contacts in a single request by passing an array of contact objects.
+
+```bash
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/add-contacts \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer {API_TOKEN}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "contacts": [
+      {
+        "name": "Amaka Obi",
+        "phone": "2348012345678",
+        "group_id": "42"
+      },
+      {
+        "name": "Chidi Nwosu",
+        "phone": "2348098765432",
+        "group_id": "42"
+      }
+    ]
+  }'
+```
+
+### Parameters
+
+<ParamField body="contacts" type="object[]" required>
+  Array of contact objects. Each object accepts the same `name`, `phone`, and optional `group_id` fields as the single-contact endpoint.
+</ParamField>
+
+## Update a contact
+
+Update the details of an existing contact. Replace `{contactid}` with the contact's numeric ID.
+
+```bash
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/update-contact/{contactid} \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer {API_TOKEN}' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "Amaka Obi-Johnson",
+    "phone": "2348012345678",
+    "group_id": "55"
+  }'
+```
+
+## Success response
+
+All Contacts API endpoints return the following on success:
+
+```json
+{
+  "status": "success",
+  "balance": "339"
+}
+```
+
+## Using contacts in messages
+
+<Note>
+  Once you have created contacts and groups, you can reference them directly in your SMS and Truecaller send requests:
+
+  - Use the `contact` parameter with a contact ID to send to a specific saved contact.
+  - Use the `group` parameter with a group ID to send to all contacts in that group.
+
+  See the [Send SMS guide](/guides/send-sms) and [Send Truecaller guide](/guides/send-truecaller) for full details.
+</Note>

@@ -1,0 +1,98 @@
+{
+  "projectType": "api-service",
+  "projectName": "Sling",
+  "projectDescription": "Sling is a messaging API platform for sending SMS, RCS, and Truecaller messages to recipients in Nigeria.",
+  "theme": "luma",
+  "primaryColor": "#1c3464",
+  "lightColor": "#24a8f3",
+  "darkColor": "#73c7f4",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "authentication",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/send-sms",
+              "guides/send-rcs",
+              "guides/send-truecaller",
+              "guides/contacts",
+              "guides/callbacks"
+            ]
+          },
+          {
+            "group": "Help",
+            "pages": [
+              "faq"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Messaging",
+            "pages": [
+              "api-reference/send-sms",
+              "api-reference/send-rcs",
+              "api-reference/send-truecaller",
+              "api-reference/message-status"
+            ]
+          },
+          {
+            "group": "RCS",
+            "pages": [
+              "api-reference/rcs-capability",
+              "api-reference/rcs-suggestions"
+            ]
+          },
+          {
+            "group": "Contacts",
+            "pages": [
+              "api-reference/contacts"
+            ]
+          },
+          {
+            "group": "Account",
+            "pages": [
+              "api-reference/balance"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Send SMS via REST API with SenderID support",
+    "Rich Communication Services (RCS) messaging with cards, carousels, and suggestions",
+    "Truecaller messaging for branded in-call notifications",
+    "Contact and group management via API",
+    "Message delivery status tracking",
+    "Account balance checking",
+    "Callback/webhook support for delivery notifications"
+  ],
+  "publicApiSurface": [
+    "POST /api/v1/send-sms",
+    "POST /api/v1/send-rcs",
+    "POST /api/v1/send-truecaller",
+    "GET /api/v1/status/{message_id}",
+    "GET /api/v1/rcs/check-capability/{phone}",
+    "GET /api/v1/balance",
+    "GET /api/v1/groups",
+    "GET /api/v1/group-contacts/{groupid}",
+    "POST /api/v1/create-group",
+    "POST /api/v1/add-contact",
+    "POST /api/v1/add-contacts",
+    "POST /api/v1/update-contact/{contactid}"
+  ]
+}

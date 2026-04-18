@@ -1,0 +1,64 @@
+---
+title: "GET /balance — Check your Sling credit balance"
+sidebarTitle: "Balance"
+description: "GET /api/v1/balance — Retrieve the current credit balance on your Sling account. Supports both Authorization header and api_token query parameter."
+---
+
+Use this endpoint to retrieve the number of message credits currently available on your Sling account. Each message you send deducts credits, so checking your balance before bulk sends helps you avoid delivery failures due to insufficient credit. The balance reflects your remaining credits as a string value.
+
+## Endpoint
+
+```
+GET https://app.sling.com.ng/api/v1/balance
+```
+
+## Headers
+
+| Header          | Value                |
+| --------------- | -------------------- |
+| `Accept`        | `application/json`   |
+| `Authorization` | `Bearer {API_TOKEN}` |
+
+## Request example
+
+```bash cURL
+curl --request GET \
+  --url https://app.sling.com.ng/api/v1/balance \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN'
+```
+
+### URL-based alternative
+
+You can also pass your token as a query parameter:
+
+```
+https://app.sling.com.ng/api/v1/balance?api_token=YOUR_API_TOKEN
+```
+
+<Note>
+  The JSON body approach with the `Authorization` header is recommended for production. URL-based requests expose your API token in server logs and browser history.
+</Note>
+
+## Responses
+
+### 200 — Success
+
+<ResponseField name="status" type="string">
+  Always `"success"` when the balance was retrieved.
+</ResponseField>
+
+<ResponseField name="balance" type="string">
+  Your current credit balance as a numeric string (e.g. `"339"`). Each unit represents one message credit.
+</ResponseField>
+
+```json 200 example
+{
+  "status": "success",
+  "balance": "339"
+}
+```
+
+<Tip>
+  Check your balance programmatically before sending bulk campaigns to ensure you have enough credits. You can top up your balance from the [Sling dashboard](https://app.sling.com.ng/panel/account).
+</Tip>

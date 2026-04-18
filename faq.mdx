@@ -1,0 +1,125 @@
+---
+title: "Sling FAQ: common questions about messaging and API"
+sidebarTitle: "FAQ"
+description: "Answers to common questions about Sling: SenderIDs, credit balance, phone number formats, RCS fallback, delivery status, and API troubleshooting."
+---
+
+Find answers to the most common questions about using Sling. If your question isn't covered here, email [hello@sling.com.ng](mailto:hello@sling.com.ng).
+
+<AccordionGroup>
+
+  <Accordion title="How does your system work?">
+    Sling uses three delivery methods to send messages to recipients:
+
+    - **SenderID** — a registered name or number that appears as the sender on the recipient's device
+    - **Long Code** — a standard-length phone number used for two-way messaging
+    - **Short Code** — a short, memorable number typically used for high-volume or marketing messages
+
+    The method used depends on your SenderID configuration and the message type you select.
+  </Accordion>
+
+  <Accordion title="Can I send SMS using my phone number?">
+    Yes, you can send SMS from your own phone number. To do this, you will need to register your SIM card with Sling. Contact the team at [hello@sling.com.ng](mailto:hello@sling.com.ng) for more information on how to get set up.
+  </Accordion>
+
+  <Accordion title="Can I get SMS at a cheaper rate?">
+    Sling already sends SMS at competitive low rates. If you are a reseller or a corporate entity sending high volumes, you may qualify for an additional discount. Reach out to [hello@sling.com.ng](mailto:hello@sling.com.ng) to discuss pricing options.
+  </Accordion>
+
+  <Accordion title="What phone number formats are accepted?">
+    When specifying a recipient number in the `to` parameter, you can use any of the following formats:
+
+    - **11-digit local format** — `08xxxxxxxxx`
+    - **Country code without plus** — `234xxxxxxxxxx`
+    - **Country code with plus** — `+234xxxxxxxxxx`
+
+    All three formats are accepted across the SMS, RCS, and Truecaller APIs.
+  </Accordion>
+
+  <Accordion title="What is a SenderID?">
+    A SenderID is the name or number that appears in the "From" field on a recipient's device when they receive your message. Instead of seeing a random number, recipients see a recognisable brand name or registered number.
+
+    You must register your SenderID before using it in API requests. Visit [app.sling.com.ng/panel/sender-ids](https://app.sling.com.ng/panel/sender-ids) to register and manage your SenderIDs.
+
+    <Tip>
+      Use a SenderID that clearly identifies your brand so recipients recognise your messages immediately.
+    </Tip>
+  </Accordion>
+
+  <Accordion title="What is the difference between transactional and promotional messages?">
+    The `type` parameter controls how your message is routed:
+
+    - **`transactional`** — for critical, time-sensitive messages such as OTPs, delivery alerts, and account notifications. These are given priority routing.
+    - **`promotional`** — for marketing and advertising content. These follow standard routing and may be subject to additional carrier restrictions.
+
+    Set the `type` field in your request body to `transactional` or `promotional` depending on the nature of your message. If omitted, the platform uses the default route associated with your SenderID.
+  </Accordion>
+
+  <Accordion title="How do I check if a message was delivered?">
+    Use the message status endpoint to look up delivery status for any message you have sent:
+
+    ```
+    GET /api/v1/status/{message_id}
+    ```
+
+    Replace `{message_id}` with the `message_id` value returned in the response when you originally sent the message. A successful response includes a `status_delivery` field indicating whether the message was delivered.
+
+    <Tip>
+      Store the `message_id` from each send response so you can query its status at any time.
+    </Tip>
+  </Accordion>
+
+  <Accordion title="What happens if I don't have enough credits?">
+    If your account does not have sufficient credits to send a message, the API returns a `400 Bad Request` error with the following response body:
+
+    ```json
+    {
+      "status": "fail",
+      "credit_used": "0",
+      "details": "insufficient credit"
+    }
+    ```
+
+    No message is sent and no credits are deducted. To resolve this, top up your credit balance from the dashboard before retrying the request.
+  </Accordion>
+
+  <Accordion title="What is fallback_sms in RCS?">
+    When sending an RCS message, you can include `"fallback_sms": true` in your request body. If the recipient's device does not support RCS — or if the message cannot be delivered over RCS — Sling will automatically resend it as a standard SMS instead.
+
+    Setting `"fallback_sms": false` means the message is only attempted over RCS, and no SMS fallback is used.
+
+    ```json
+    {
+      "sender": "RCS",
+      "to": "08140363541",
+      "message": "Hello from Sling",
+      "type": "transactional",
+      "template_type": "text",
+      "fallback_sms": true
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Where do I find my API token?">
+    Your API token is available in your Sling dashboard. To retrieve it:
+
+    1. Log in to your account at [app.sling.com.ng](https://app.sling.com.ng)
+    2. Navigate to [app.sling.com.ng/panel/account/api](https://app.sling.com.ng/panel/account/api)
+    3. Copy your API token and include it in the `Authorization` header of every request:
+
+    ```
+    Authorization: Bearer {API TOKEN}
+    ```
+
+    Keep your API token private and do not share it publicly.
+  </Accordion>
+
+</AccordionGroup>
+
+## Still need help?
+
+<Note>
+  If you have a question that isn't answered here, the Sling team is ready to help. Send an email to [hello@sling.com.ng](mailto:hello@sling.com.ng) and someone will get back to you.
+
+  You can also explore the full [Postman collection](https://documenter.getpostman.com/view/16325834/2sB2iwFEzA) for interactive examples of every API endpoint.
+</Note>

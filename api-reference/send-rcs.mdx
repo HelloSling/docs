@@ -1,0 +1,273 @@
+---
+title: "POST /send-rcs — Send rich RCS messages to users"
+sidebarTitle: "Send RCS"
+description: "POST /api/v1/send-rcs — Send rich RCS messages including text, standalone cards, and carousels. Supports interactive suggestions and SMS fallback."
+---
+
+Use this endpoint to send Rich Communication Services (RCS) messages to Nigerian phone numbers. RCS supports rich content formats — plain text, standalone image cards, and carousels of multiple cards — as well as interactive suggestion chips. If the recipient's device does not support RCS, you can enable automatic SMS fallback with `fallback_sms`.
+
+## Endpoint
+
+```
+POST https://app.sling.com.ng/api/v1/send-rcs
+```
+
+## Headers
+
+| Header          | Value                |
+| --------------- | -------------------- |
+| `Accept`        | `application/json`   |
+| `Authorization` | `Bearer {API_TOKEN}` |
+
+## Parameters
+
+<ParamField body="sender" type="string" required>
+  Your registered Sender ID. Must be registered on your dashboard before use.
+</ParamField>
+
+<ParamField body="to" type="string" required>
+  The recipient's phone number. Accepts an 11-digit local format (e.g. `08140363541`), with country code (`2348140363541`), or with a `+` prefix (`+2348140363541`).
+</ParamField>
+
+<ParamField body="type" type="string" required>
+  Sender ID route. Accepted values: `transactional` or `promotional`.
+</ParamField>
+
+<ParamField body="template_type" type="string" required>
+  The RCS content format. One of:
+  - `text` — plain text message, optionally with suggestions
+  - `standalone` — single rich card with title, description, and image
+  - `carousel` — horizontal scroll of multiple rich cards
+</ParamField>
+
+<ParamField body="message" type="string">
+  The text body of the message. Required when `template_type` is `text`.
+</ParamField>
+
+<ParamField body="fallback_sms" type="boolean" default="false">
+  When `true`, Sling will automatically fall back to SMS delivery if the recipient's phone does not support RCS.
+</ParamField>
+
+<ParamField body="suggestions" type="array">
+  An array of interactive suggestion chip objects displayed below the message. Supported for all template types. See [RCS Suggestions](/api-reference/rcs-suggestions) for the full list of suggestion formats.
+
+  <Expandable title="suggestion object properties">
+    <ParamField body="type" type="string" required>
+      Suggestion type: `reply`, `url`, `dialer`, `location_latlng`, `location_query`, `share_location`, or `calendar_event`.
+    </ParamField>
+    <ParamField body="text" type="string" required>
+      Label displayed on the suggestion chip.
+    </ParamField>
+    <ParamField body="postback" type="string" required>
+      Value sent back to your webhook when the user taps the chip.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="standalone" type="object">
+  Required when `template_type` is `standalone`. Defines the rich card content.
+
+  <Expandable title="standalone properties">
+    <ParamField body="title" type="string" required>
+      Card heading text.
+    </ParamField>
+    <ParamField body="description" type="string" required>
+      Card body text.
+    </ParamField>
+    <ParamField body="image" type="string" required>
+      Publicly accessible URL of the card image.
+    </ParamField>
+    <ParamField body="orientation" type="string" required>
+      Card layout: `VERTICAL` or `HORIZONTAL`.
+    </ParamField>
+    <ParamField body="alignment" type="string">
+      Image alignment when `orientation` is `HORIZONTAL`. Accepted values: `LEFT` or `RIGHT`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="carousel" type="array">
+  Required when `template_type` is `carousel`. An array of card objects displayed in a horizontal scroll.
+
+  <Expandable title="carousel card properties">
+    <ParamField body="title" type="string" required>
+      Card heading text.
+    </ParamField>
+    <ParamField body="description" type="string" required>
+      Card body text.
+    </ParamField>
+    <ParamField body="image" type="string" required>
+      Publicly accessible URL of the card image.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Request examples
+
+<Tabs>
+  <Tab title="Text">
+
+```bash cURL
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/send-rcs \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "sender": "RCS",
+    "to": "08140363541",
+    "message": "Hello RCS",
+    "type": "transactional",
+    "template_type": "text",
+    "fallback_sms": false,
+    "suggestions": [
+      {
+        "type": "reply",
+        "text": "How are you",
+        "postback": "reply_how_are_you"
+      },
+      {
+        "type": "reply",
+        "text": "Leave me",
+        "postback": "reply_leave_me"
+      }
+    ]
+  }'
+```
+
+  </Tab>
+  <Tab title="Standalone card">
+
+```bash cURL
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/send-rcs \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "sender": "RCS",
+    "to": "08140363523",
+    "type": "transactional",
+    "template_type": "standalone",
+    "fallback_sms": false,
+    "standalone": {
+      "title": "Card Title",
+      "description": "Card Description",
+      "image": "https://sling.com.ng/assets/sling.png",
+      "orientation": "VERTICAL",
+      "alignment": "LEFT"
+    },
+    "suggestions": [
+      {
+        "type": "reply",
+        "text": "How are you",
+        "postback": "reply_how_are_you"
+      }
+    ]
+  }'
+```
+
+  </Tab>
+  <Tab title="Carousel">
+
+```bash cURL
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/send-rcs \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "sender": "RCS",
+    "to": "08140363523",
+    "type": "transactional",
+    "template_type": "carousel",
+    "fallback_sms": false,
+    "carousel": [
+      {
+        "title": "Card 1",
+        "description": "Card 1 description",
+        "image": "https://sling.com.ng/assets/sling.png"
+      },
+      {
+        "title": "Card 2",
+        "description": "Card 2 description",
+        "image": "https://sling.com.ng/assets/sling.png"
+      }
+    ],
+    "suggestions": [
+      {
+        "type": "reply",
+        "text": "Learn more",
+        "postback": "reply_learn_more"
+      }
+    ]
+  }'
+```
+
+  </Tab>
+</Tabs>
+
+## Responses
+
+### 200 — Success
+
+<ResponseField name="status" type="string">
+  Always `"success"` when the message was accepted.
+</ResponseField>
+
+<ResponseField name="message_id" type="string">
+  Unique identifier for this message. Use it with the [Message Status](/api-reference/message-status) endpoint to track delivery.
+</ResponseField>
+
+<ResponseField name="sender" type="string">
+  The Sender ID used to deliver the message.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  The text content of the message (for `text` template type).
+</ResponseField>
+
+<ResponseField name="recipient" type="string">
+  The normalised E.164 phone number the message was delivered to.
+</ResponseField>
+
+<ResponseField name="credit_used" type="number">
+  Number of message credits deducted for this send.
+</ResponseField>
+
+```json 200 example
+{
+  "status": "success",
+  "message_id": "2bajqzt5tw",
+  "sender": "Sling RCS",
+  "message": "Hello, from Sling",
+  "recipient": "2349123772222",
+  "credit_used": 1
+}
+```
+
+### 400 — Error
+
+<CodeGroup>
+
+```json Insufficient credit
+{
+  "status": "fail",
+  "credit_used": "0",
+  "details": "insufficient credit"
+}
+```
+
+```json Incomplete parameters
+{
+  "status": "fail",
+  "credit_used": "0",
+  "details": "The given data was invalid"
+}
+```
+
+</CodeGroup>
+
+<Tip>
+  Before sending RCS, use the [RCS Capability](/api-reference/rcs-capability) endpoint to check whether the recipient's device supports RCS. Set `fallback_sms: true` to ensure delivery even when RCS is unavailable.
+</Tip>

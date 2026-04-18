@@ -1,0 +1,161 @@
+---
+title: "RCS suggestion types: complete reference guide"
+sidebarTitle: "RCS Suggestions"
+description: "Full reference for all Sling RCS suggestion chip types: reply, url, dialer, location_latlng, location_query, share_location, and calendar_event with examples."
+---
+
+Suggestions are interactive chips displayed below an RCS message that let recipients take quick actions with a single tap. You add them by including a `suggestions` array in your [Send RCS](/api-reference/send-rcs) request body. Suggestions work with all three RCS template types: `text`, `standalone`, and `carousel`.
+
+Each suggestion object requires at minimum a `type`, a `text` label shown on the chip, and a `postback` value sent to your system when the user taps it. Additional fields depend on the suggestion type.
+
+<Note>
+  The `suggestions` array can contain objects of different types in the same request. Mix and match to give recipients a variety of actions in one message.
+</Note>
+
+## Suggestion types
+
+<AccordionGroup>
+  <Accordion title="reply — Quick reply chip">
+    Displays a tappable chip that sends a predefined reply back to your system. Use this for yes/no questions, menu selections, or any prompt where you want to guide the user's response.
+
+    ```json
+    {
+      "type": "reply",
+      "text": "hi",
+      "postback": "hi"
+    }
+    ```
+
+    | Field      | Required | Description                                              |
+    | ---------- | -------- | -------------------------------------------------------- |
+    | `type`     | Yes      | Must be `"reply"`.                                       |
+    | `text`     | Yes      | Label displayed on the chip.                             |
+    | `postback` | Yes      | Value sent to your system when the user taps the chip.   |
+  </Accordion>
+
+  <Accordion title="url — Open a URL">
+    Opens a web page in the device browser when tapped. Use this to link to product pages, articles, or any web destination.
+
+    ```json
+    {
+      "type": "url",
+      "text": "Click Url",
+      "postback": "Clicked URL",
+      "url": "https://click.sling"
+    }
+    ```
+
+    | Field      | Required | Description                                            |
+    | ---------- | -------- | ------------------------------------------------------ |
+    | `type`     | Yes      | Must be `"url"`.                                       |
+    | `text`     | Yes      | Label displayed on the chip.                           |
+    | `postback` | Yes      | Value sent to your system when the user taps the chip. |
+    | `url`      | Yes      | The web address to open.                               |
+  </Accordion>
+
+  <Accordion title="dialer — Initiate a phone call">
+    Opens the device's dialer with the specified phone number pre-filled. Use this for support lines, sales calls, or any scenario where you want to prompt a call.
+
+    ```json
+    {
+      "type": "dialer",
+      "text": "Call",
+      "postback": "Call id",
+      "phone": "0802222222"
+    }
+    ```
+
+    | Field      | Required | Description                                            |
+    | ---------- | -------- | ------------------------------------------------------ |
+    | `type`     | Yes      | Must be `"dialer"`.                                    |
+    | `text`     | Yes      | Label displayed on the chip.                           |
+    | `postback` | Yes      | Value sent to your system when the user taps the chip. |
+    | `phone`    | Yes      | The phone number to pre-fill in the dialer.            |
+  </Accordion>
+
+  <Accordion title="location_latlng — Show a map location">
+    Opens a map to a specific latitude/longitude coordinate with an optional label. Use this to highlight a store location, event venue, or delivery address.
+
+    ```json
+    {
+      "type": "location_latlng",
+      "text": "View location",
+      "postback": "Location",
+      "lat": "6.5244",
+      "lng": "3.3792",
+      "label": "Sling HQ"
+    }
+    ```
+
+    | Field      | Required | Description                                            |
+    | ---------- | -------- | ------------------------------------------------------ |
+    | `type`     | Yes      | Must be `"location_latlng"`.                           |
+    | `text`     | Yes      | Label displayed on the chip.                           |
+    | `postback` | Yes      | Value sent to your system when the user taps the chip. |
+    | `lat`      | Yes      | Latitude of the location.                              |
+    | `lng`      | Yes      | Longitude of the location.                             |
+    | `label`    | Yes      | Display name for the pin on the map.                   |
+  </Accordion>
+
+  <Accordion title="location_query — Search for a location">
+    Opens a map and performs a search for the specified query string. Use this when you want to direct users to search for a place name or address rather than pin exact coordinates.
+
+    ```json
+    {
+      "type": "location_query",
+      "text": "Find us",
+      "postback": "Location",
+      "query": "Sling Lagos Nigeria"
+    }
+    ```
+
+    | Field      | Required | Description                                            |
+    | ---------- | -------- | ------------------------------------------------------ |
+    | `type`     | Yes      | Must be `"location_query"`.                            |
+    | `text`     | Yes      | Label displayed on the chip.                           |
+    | `postback` | Yes      | Value sent to your system when the user taps the chip. |
+    | `query`    | Yes      | The search term to use in the map application.         |
+  </Accordion>
+
+  <Accordion title="share_location — Request recipient's location">
+    Prompts the recipient to share their current GPS location with your system. Use this for delivery tracking, store finders, or any location-aware flow.
+
+    ```json
+    {
+      "type": "share_location",
+      "text": "Send location",
+      "postback": "Send location"
+    }
+    ```
+
+    | Field      | Required | Description                                            |
+    | ---------- | -------- | ------------------------------------------------------ |
+    | `type`     | Yes      | Must be `"share_location"`.                            |
+    | `text`     | Yes      | Label displayed on the chip.                           |
+    | `postback` | Yes      | Value sent to your system when the user taps the chip. |
+  </Accordion>
+
+  <Accordion title="calendar_event — Add event to calendar">
+    Prompts the recipient to add an event to their device calendar. Use this for appointment confirmations, event reminders, or scheduled meetings.
+
+    ```json
+    {
+      "type": "calendar_event",
+      "text": "Save date",
+      "postback": "Date",
+      "datetime": "2025-05-27T01:02",
+      "title": "Sling Meeting",
+      "description": "Meeting details"
+    }
+    ```
+
+    | Field         | Required | Description                                            |
+    | ------------- | -------- | ------------------------------------------------------ |
+    | `type`        | Yes      | Must be `"calendar_event"`.                            |
+    | `text`        | Yes      | Label displayed on the chip.                           |
+    | `postback`    | Yes      | Value sent to your system when the user taps the chip. |
+    | `datetime`    | Yes      | ISO 8601 datetime string for the event start time.     |
+    | `title`       | Yes      | Event title shown in the calendar.                     |
+    | `description` | Yes      | Event description or notes.                            |
+  </Accordion>
+</AccordionGroup>

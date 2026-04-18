@@ -1,0 +1,238 @@
+---
+title: "Contacts API — Manage groups and contacts"
+sidebarTitle: "Contacts"
+description: "Reference for all Sling Contacts API endpoints: list groups, get group contacts, create groups, add single or bulk contacts, and update contact details."
+---
+
+The Contacts API lets you manage the phone book stored in your Sling account. You can organise contacts into groups and then pass a `contact` ID or `group` ID directly to [Send SMS](/api-reference/send-sms), [Send RCS](/api-reference/send-rcs), or [Send Truecaller](/api-reference/send-truecaller) instead of specifying individual phone numbers. All endpoints use the same base URL and auth headers as the rest of the Sling API.
+
+## Headers
+
+| Header          | Value                |
+| --------------- | -------------------- |
+| `Accept`        | `application/json`   |
+| `Authorization` | `Bearer {API_TOKEN}` |
+
+---
+
+## List groups
+
+Retrieve all contact groups in your account.
+
+```
+GET https://app.sling.com.ng/api/v1/groups
+```
+
+```bash cURL
+curl --request GET \
+  --url https://app.sling.com.ng/api/v1/groups \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN'
+```
+
+```json 200 example
+{
+  "status": "success",
+  "balance": "339"
+}
+```
+
+---
+
+## Get group contacts
+
+Retrieve all contacts that belong to a specific group.
+
+```
+GET https://app.sling.com.ng/api/v1/group-contacts/{groupid}
+```
+
+<ParamField path="groupid" type="string" required>
+  The ID of the group whose contacts you want to list.
+</ParamField>
+
+```bash cURL
+curl --request GET \
+  --url https://app.sling.com.ng/api/v1/group-contacts/42 \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN'
+```
+
+```json 200 example
+{
+  "status": "success",
+  "balance": "339"
+}
+```
+
+---
+
+## Create a group
+
+Create a new contact group.
+
+```
+POST https://app.sling.com.ng/api/v1/create-group
+```
+
+<ParamField body="name" type="string" required>
+  The name for the new group.
+</ParamField>
+
+```bash cURL
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/create-group \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "VIP Customers"
+  }'
+```
+
+```json 200 example
+{
+  "status": "success",
+  "balance": "339"
+}
+```
+
+---
+
+## Add a single contact
+
+Add one contact to your contact list, optionally assigning them to a group.
+
+```
+POST https://app.sling.com.ng/api/v1/add-contact
+```
+
+<ParamField body="name" type="string" required>
+  The contact's display name.
+</ParamField>
+
+<ParamField body="phone" type="string" required>
+  The contact's phone number. Accepts an 11-digit local format, with country code (`234...`), or with a `+` prefix (`+234...`).
+</ParamField>
+
+<ParamField body="group_id" type="string">
+  ID of the group to assign the contact to. Omit to add the contact without a group.
+</ParamField>
+
+```bash cURL
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/add-contact \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "Ada Obi",
+    "phone": "08140363541",
+    "group_id": "42"
+  }'
+```
+
+```json 200 example
+{
+  "status": "success",
+  "balance": "339"
+}
+```
+
+---
+
+## Add multiple contacts
+
+Add a batch of contacts in a single request, optionally assigning them all to the same group.
+
+```
+POST https://app.sling.com.ng/api/v1/add-contacts
+```
+
+<ParamField body="contacts" type="array" required>
+  An array of contact objects to create.
+
+  <Expandable title="contact object properties">
+    <ParamField body="name" type="string" required>
+      The contact's display name.
+    </ParamField>
+    <ParamField body="phone" type="string" required>
+      The contact's phone number.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="group_id" type="string">
+  ID of the group to assign all contacts to. Omit to add contacts without a group.
+</ParamField>
+
+```bash cURL
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/add-contacts \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "contacts": [
+      { "name": "Ada Obi", "phone": "08140363541" },
+      { "name": "Emeka Nwosu", "phone": "07034567890" }
+    ],
+    "group_id": "42"
+  }'
+```
+
+```json 200 example
+{
+  "status": "success",
+  "balance": "339"
+}
+```
+
+---
+
+## Update a contact
+
+Update the fields of an existing contact.
+
+```
+POST https://app.sling.com.ng/api/v1/update-contact/{contactid}
+```
+
+<ParamField path="contactid" type="string" required>
+  The ID of the contact to update.
+</ParamField>
+
+<ParamField body="name" type="string">
+  Updated display name for the contact.
+</ParamField>
+
+<ParamField body="phone" type="string">
+  Updated phone number for the contact.
+</ParamField>
+
+<ParamField body="group_id" type="string">
+  ID of a group to assign the contact to.
+</ParamField>
+
+```bash cURL
+curl --request POST \
+  --url https://app.sling.com.ng/api/v1/update-contact/101 \
+  --header 'Accept: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "name": "Ada Obi-Johnson",
+    "phone": "08140363541"
+  }'
+```
+
+```json 200 example
+{
+  "status": "success",
+  "balance": "339"
+}
+```
+
+<Note>
+  Once you have a `group_id`, pass it as the `group` parameter in your messaging requests to broadcast to every contact in that group without listing individual numbers.
+</Note>

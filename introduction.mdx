@@ -1,0 +1,58 @@
+---
+title: "What is Sling? SMS, RCS & Truecaller API overview"
+sidebarTitle: "Introduction"
+description: "Sling is a REST API platform for sending SMS, RCS, and Truecaller messages in Nigeria. Learn the base URL, required headers, and what Sling offers."
+---
+
+Sling is a messaging API platform built for Nigeria. It gives you a single, consistent REST API to send SMS, RCS, and Truecaller messages to any recipient — whether you're reaching one person or an entire contact group. You authenticate once with a bearer token and start sending in minutes.
+
+## What Sling offers
+
+- **SMS** — Send transactional and promotional text messages to 11-digit Nigerian numbers or numbers with the `234` country code.
+- **RCS** — Deliver rich messages with cards, carousels, images, reply suggestions, and interactive actions to RCS-enabled devices.
+- **Truecaller messaging** — Reach users through Truecaller with branded, verified messages that appear in the Truecaller app.
+- **Contact management** — Create groups, add individual or bulk contacts, and target entire lists with a single API call.
+- **Delivery status** — Query the status of any sent message using its message ID to confirm delivery.
+- **Balance API** — Check your available messaging credit programmatically at any time.
+
+## How it works
+
+Every Sling API request follows the same pattern: you include your API token in the `Authorization` header and send a JSON body to the appropriate endpoint. The API returns JSON responses with a `status` field indicating success or failure, along with any relevant data such as a `message_id` or `credit_used` count.
+
+Authentication uses bearer tokens. You obtain your token from your dashboard and attach it to every request — no OAuth flows or rotating keys to manage.
+
+## Base URL
+
+All API endpoints share the following base URL:
+
+```bash
+https://app.sling.com.ng/api/v1
+```
+
+Append the endpoint path to this base URL for every request. For example, to send an SMS you call `POST https://app.sling.com.ng/api/v1/send-sms`.
+
+## Required headers
+
+Include these two headers on every request:
+
+| Header          | Value                    |
+| --------------- | ------------------------ |
+| `Accept`        | `application/json`       |
+| `Authorization` | `Bearer {YOUR_API_TOKEN}` |
+
+Replace `{YOUR_API_TOKEN}` with the token from your dashboard. See [Authentication](/authentication) for instructions on obtaining your token.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="key" href="/authentication">
+    Get your API token and learn how to add it to every request.
+  </Card>
+  <Card title="Quick Start" icon="bolt" href="/quickstart">
+    Send your first SMS in under 5 minutes with a full code example.
+  </Card>
+</CardGroup>
+
+<Note>
+  Have questions beyond the scope of this documentation? Email the Sling team at [hello@sling.com.ng](mailto:hello@sling.com.ng).
+</Note>

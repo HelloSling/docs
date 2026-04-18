@@ -1,0 +1,222 @@
+---
+title: "Send RCS messages with Sling: cards and carousels"
+sidebarTitle: "Send RCS"
+description: "Send rich RCS messages including text, cards, carousels, and interactive suggestions to RCS-enabled recipients via the Sling API."
+---
+
+RCS (Rich Communication Services) is the modern successor to SMS, enabling branded messages with images, interactive buttons, cards, and carousels. The Sling RCS API lets you send these rich messages to RCS-enabled phone numbers in Nigeria. If a recipient's device or carrier does not support RCS, you can automatically fall back to a standard SMS by setting `fallback_sms` to `true`.
+
+All RCS requests are `POST` to `https://app.sling.com.ng/api/v1/send-rcs` with the `Authorization: Bearer {API_TOKEN}` header.
+
+## Message types
+
+Choose the `template_type` that matches the experience you want to deliver. Each tab below shows a complete request body.
+
+<Tabs>
+  <Tab title="Simple text">
+    Send a plain text message over the RCS channel.
+
+    ```json
+    {
+      "sender": "RCS",
+      "to": "08140363541",
+      "message": "Hello RCS 333",
+      "type": "transactional",
+      "template_type": "text",
+      "fallback_sms": false
+    }
+    ```
+  </Tab>
+
+  <Tab title="Text with suggestions">
+    Attach quick-reply chips to a text message. Each suggestion has a visible `text` label and a `postback` value sent when the user taps it.
+
+    ```json
+    {
+      "sender": "RCS",
+      "to": "08140363541",
+      "message": "Hello RCS",
+      "type": "transactional",
+      "template_type": "text",
+      "fallback_sms": false,
+      "suggestions": [
+        {
+          "type": "reply",
+          "text": "How are you will show",
+          "postback": "How are you will be sent"
+        },
+        {
+          "type": "reply",
+          "text": "Leave me will show",
+          "postback": "Leave me will be sent"
+        }
+      ]
+    }
+    ```
+  </Tab>
+
+  <Tab title="Standalone card">
+    Send a rich card with a title, description, and image. Use `orientation` to control the card layout and `alignment` to position text when the card is horizontal.
+
+    ```json
+    {
+      "sender": "RCS",
+      "to": "08140363523",
+      "type": "transactional",
+      "template_type": "standalone",
+      "fallback_sms": false,
+      "standalone": {
+        "title": "Card Title",
+        "description": "Card Description",
+        "image": "https://sling.com.ng/assets/sling.png",
+        "orientation": "VERTICAL",
+        "alignment": "LEFT"
+      }
+    }
+    ```
+
+    <Note>
+      `orientation` accepts `VERTICAL` or `HORIZONTAL`. `alignment` accepts `LEFT` or `RIGHT`, and is only applied when `orientation` is `HORIZONTAL`.
+    </Note>
+  </Tab>
+
+  <Tab title="Card with suggestions">
+    Combine a standalone card with interactive suggestion chips.
+
+    ```json
+    {
+      "sender": "RCS",
+      "to": "08140363523",
+      "type": "transactional",
+      "template_type": "standalone",
+      "fallback_sms": false,
+      "standalone": {
+        "title": "Card Title",
+        "description": "Card Description",
+        "image": "https://sling.com.ng/assets/sling.png",
+        "orientation": "VERTICAL",
+        "alignment": "LEFT"
+      },
+      "suggestions": [
+        {
+          "type": "reply",
+          "text": "How are you will show",
+          "postback": "How are you will be sent"
+        },
+        {
+          "type": "reply",
+          "text": "Leave me will show",
+          "postback": "Leave me will be sent"
+        }
+      ]
+    }
+    ```
+  </Tab>
+
+  <Tab title="Carousel">
+    Display a horizontally scrollable set of cards. Each item in the `carousel` array becomes one card.
+
+    ```json
+    {
+      "sender": "RCS",
+      "to": "08140363523",
+      "type": "transactional",
+      "template_type": "carousel",
+      "fallback_sms": false,
+      "carousel": [
+        {
+          "title": "Card 1",
+          "description": "Card 1 desc",
+          "image": "https://sling.com.ng/assets/sling.png"
+        },
+        {
+          "title": "Card 2",
+          "description": "Card 2 desc",
+          "image": "https://sling.com.ng/assets/sling.png"
+        }
+      ]
+    }
+    ```
+  </Tab>
+
+  <Tab title="Carousel with suggestions">
+    A scrollable carousel with interactive suggestion chips below the cards.
+
+    ```json
+    {
+      "sender": "RCS",
+      "to": "08140363523",
+      "type": "transactional",
+      "template_type": "carousel",
+      "fallback_sms": false,
+      "carousel": [
+        {
+          "title": "Card 1",
+          "description": "Card 1 desc",
+          "image": "https://sling.com.ng/assets/sling.png"
+        },
+        {
+          "title": "Card 2",
+          "description": "Card 2 desc",
+          "image": "https://sling.com.ng/assets/sling.png"
+        }
+      ],
+      "suggestions": [
+        {
+          "type": "reply",
+          "text": "How are you will show",
+          "postback": "How are you will be sent"
+        },
+        {
+          "type": "reply",
+          "text": "Leave me will show",
+          "postback": "Leave me will be sent"
+        }
+      ]
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## SMS fallback
+
+<Note>
+  Set `fallback_sms` to `true` in any request body and Sling will automatically re-send the message as a standard SMS if the recipient's device or network provider does not support RCS. This ensures delivery without requiring you to implement your own fallback logic.
+</Note>
+
+## Responses
+
+### Success
+
+```json
+{
+  "status": "success",
+  "message_id": "2bajqzt5tw",
+  "sender": "Sling RCS",
+  "message": "Hello, from Sling",
+  "recipient": "2349123772222",
+  "credit_used": 1
+}
+```
+
+### Errors
+
+```json
+{
+  "status": "fail",
+  "credit_used": "0",
+  "details": "insufficient credit"
+}
+```
+
+```json
+{
+  "status": "fail",
+  "credit_used": "0",
+  "details": "The given data was invalid"
+}
+```
+
+## Suggestion types
+
+The `suggestions` array accepts several action types beyond simple replies. See the [RCS suggestions reference](/api-reference/rcs-suggestions) for the full list of available types including URL links, dialers, location pins, and calendar events.

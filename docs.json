@@ -1,0 +1,88 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "Sling",
+  "theme": "luma",
+  "colors": {
+    "primary": "#1c3464",
+    "light": "#24a8f3",
+    "dark": "#73c7f4"
+  },
+  "favicon": "https://media.brand.dev/73c4cf80-2fa0-4a18-afea-a60a97612c74.png",
+  "logo": {
+    "light": "https://media.brand.dev/03e6734d-3a27-4962-9351-ddcbcaee5966.png",
+    "dark": "https://media.brand.dev/03e6734d-3a27-4962-9351-ddcbcaee5966.png"
+  },
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://app.sling.com.ng/panel/account/api"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "authentication",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/send-sms",
+              "guides/send-rcs",
+              "guides/send-truecaller",
+              "guides/contacts",
+              "guides/callbacks"
+            ]
+          },
+          {
+            "group": "Help",
+            "pages": [
+              "faq"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Messaging",
+            "pages": [
+              "api-reference/send-sms",
+              "api-reference/send-rcs",
+              "api-reference/send-truecaller",
+              "api-reference/message-status"
+            ]
+          },
+          {
+            "group": "RCS",
+            "pages": [
+              "api-reference/rcs-capability",
+              "api-reference/rcs-suggestions"
+            ]
+          },
+          {
+            "group": "Contacts",
+            "pages": [
+              "api-reference/contacts"
+            ]
+          },
+          {
+            "group": "Account",
+            "pages": [
+              "api-reference/balance"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
