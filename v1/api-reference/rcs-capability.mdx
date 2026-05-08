@@ -4,7 +4,7 @@ sidebarTitle: "RCS Capability"
 description: "GET /api/v1/rcs/check-capability/{phone} — Check whether a phone number is RCS-enabled. Returns rcs_enabled and a list of supported device capabilities."
 ---
 
-Use this endpoint to verify whether a recipient's phone number is capable of receiving RCS messages before attempting delivery. The response tells you whether the device is RCS-enabled and lists which RCS capabilities it supports. Calling this endpoint before [Send RCS](/api-reference/send-rcs) lets you decide programmatically whether to send a rich message or fall back to SMS.
+Use this endpoint to verify whether a recipient's phone number is capable of receiving RCS messages before attempting delivery. The response tells you whether the device is RCS-enabled and lists which RCS capabilities it supports. Calling this endpoint before [Send RCS](/v1/api-reference/send-rcs) lets you decide programmatically whether to send a rich message or fall back to SMS.
 
 ## Endpoint
 
@@ -93,5 +93,5 @@ When the number does not support RCS, `rcs_enabled` is `false`, `capabilities` i
 ```
 
 <Tip>
-  When `rcs_enabled` is `false`, send your message via [Send SMS](/api-reference/send-sms) instead, or use [Send RCS](/api-reference/send-rcs) with `fallback_sms: true` to have Sling handle the fallback automatically.
+  When `rcs_enabled` is `false`, send your message via [Send SMS](/v1/api-reference/send-sms) instead, or use [Send RCS](/v1/api-reference/send-rcs) with `fallback_sms: true` to have Sling handle the fallback automatically.
 </Tip>

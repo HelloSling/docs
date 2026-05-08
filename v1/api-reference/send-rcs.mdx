@@ -49,7 +49,7 @@ POST https://app.sling.com.ng/api/v1/send-rcs
 </ParamField>
 
 <ParamField body="suggestions" type="array">
-  An array of interactive suggestion chip objects displayed below the message. Supported for all template types. See [RCS Suggestions](/api-reference/rcs-suggestions) for the full list of suggestion formats.
+  An array of interactive suggestion chip objects displayed below the message. Supported for all template types. See [RCS Suggestions](/v1/api-reference/rcs-suggestions) for the full list of suggestion formats.
 
   <Expandable title="suggestion object properties">
     <ParamField body="type" type="string" required>
@@ -216,7 +216,7 @@ curl --request POST \
 </ResponseField>
 
 <ResponseField name="message_id" type="string">
-  Unique identifier for this message. Use it with the [Message Status](/api-reference/message-status) endpoint to track delivery.
+  Unique identifier for this message. Use it with the [Message Status](/v1/api-reference/message-status) endpoint to track delivery.
 </ResponseField>
 
 <ResponseField name="sender" type="string">
@@ -269,5 +269,5 @@ curl --request POST \
 </CodeGroup>
 
 <Tip>
-  Before sending RCS, use the [RCS Capability](/api-reference/rcs-capability) endpoint to check whether the recipient's device supports RCS. Set `fallback_sms: true` to ensure delivery even when RCS is unavailable.
+  Before sending RCS, use the [RCS Capability](/v1/api-reference/rcs-capability) endpoint to check whether the recipient's device supports RCS. Set `fallback_sms: true` to ensure delivery even when RCS is unavailable.
 </Tip>

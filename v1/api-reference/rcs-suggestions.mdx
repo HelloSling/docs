@@ -4,7 +4,7 @@ sidebarTitle: "RCS Suggestions"
 description: "Full reference for all Sling RCS suggestion chip types: reply, url, dialer, location_latlng, location_query, share_location, and calendar_event with examples."
 ---
 
-Suggestions are interactive chips displayed below an RCS message that let recipients take quick actions with a single tap. You add them by including a `suggestions` array in your [Send RCS](/api-reference/send-rcs) request body. Suggestions work with all three RCS template types: `text`, `standalone`, and `carousel`.
+Suggestions are interactive chips displayed below an RCS message that let recipients take quick actions with a single tap. You add them by including a `suggestions` array in your [Send RCS](/v1/api-reference/send-rcs) request body. Suggestions work with all three RCS template types: `text`, `standalone`, and `carousel`.
 
 Each suggestion object requires at minimum a `type`, a `text` label shown on the chip, and a `postback` value sent to your system when the user taps it. Additional fields depend on the suggestion type.
 

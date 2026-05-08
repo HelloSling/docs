@@ -20,69 +20,192 @@
     }
   },
   "navigation": {
-    "tabs": [
+    "versions": [
       {
-        "tab": "Documentation",
-        "groups": [
+        "version": "v1",
+        "default": true,
+        "tabs": [
           {
-            "group": "Get Started",
-            "pages": [
-              "introduction",
-              "authentication",
-              "quickstart"
+            "tab": "Documentation",
+            "groups": [
+              {
+                "group": "Get Started",
+                "pages": [
+                  "v1/introduction",
+                  "v1/authentication",
+                  "v1/quickstart"
+                ]
+              },
+              {
+                "group": "Guides",
+                "pages": [
+                  "v1/guides/send-sms",
+                  "v1/guides/send-rcs",
+                  "v1/guides/send-truecaller",
+                  "v1/guides/contacts",
+                  "v1/guides/callbacks"
+                ]
+              },
+              {
+                "group": "Help",
+                "pages": [
+                  "v1/faq"
+                ]
+              }
             ]
           },
           {
-            "group": "Guides",
-            "pages": [
-              "guides/send-sms",
-              "guides/send-rcs",
-              "guides/send-truecaller",
-              "guides/contacts",
-              "guides/callbacks"
-            ]
-          },
-          {
-            "group": "Help",
-            "pages": [
-              "faq"
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Messaging",
+                "pages": [
+                  "v1/api-reference/send-sms",
+                  "v1/api-reference/send-rcs",
+                  "v1/api-reference/send-truecaller",
+                  "v1/api-reference/message-status"
+                ]
+              },
+              {
+                "group": "RCS",
+                "pages": [
+                  "v1/api-reference/rcs-capability",
+                  "v1/api-reference/rcs-suggestions"
+                ]
+              },
+              {
+                "group": "Contacts",
+                "pages": [
+                  "v1/api-reference/contacts"
+                ]
+              },
+              {
+                "group": "Account",
+                "pages": [
+                  "v1/api-reference/balance"
+                ]
+              }
             ]
           }
         ]
       },
       {
-        "tab": "API Reference",
-        "groups": [
+        "version": "v2",
+        "tag": "Beta",
+        "tabs": [
           {
-            "group": "Messaging",
-            "pages": [
-              "api-reference/send-sms",
-              "api-reference/send-rcs",
-              "api-reference/send-truecaller",
-              "api-reference/message-status"
+            "tab": "Documentation",
+            "groups": [
+              {
+                "group": "Get Started",
+                "pages": [
+                  "v2/introduction",
+                  "v2/authentication",
+                  "v2/quickstart"
+                ]
+              }
             ]
           },
           {
-            "group": "RCS",
-            "pages": [
-              "api-reference/rcs-capability",
-              "api-reference/rcs-suggestions"
-            ]
-          },
-          {
-            "group": "Contacts",
-            "pages": [
-              "api-reference/contacts"
-            ]
-          },
-          {
-            "group": "Account",
-            "pages": [
-              "api-reference/balance"
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "API Reference",
+                "pages": [
+                  "v2/api-reference/overview"
+                ]
+              }
             ]
           }
         ]
       }
     ]
-  }
+  },
+  "redirects": [
+    {
+      "source": "/introduction",
+      "destination": "/v1/introduction",
+      "permanent": true
+    },
+    {
+      "source": "/authentication",
+      "destination": "/v1/authentication",
+      "permanent": true
+    },
+    {
+      "source": "/quickstart",
+      "destination": "/v1/quickstart",
+      "permanent": true
+    },
+    {
+      "source": "/faq",
+      "destination": "/v1/faq",
+      "permanent": true
+    },
+    {
+      "source": "/guides/send-sms",
+      "destination": "/v1/guides/send-sms",
+      "permanent": true
+    },
+    {
+      "source": "/guides/send-rcs",
+      "destination": "/v1/guides/send-rcs",
+      "permanent": true
+    },
+    {
+      "source": "/guides/send-truecaller",
+      "destination": "/v1/guides/send-truecaller",
+      "permanent": true
+    },
+    {
+      "source": "/guides/contacts",
+      "destination": "/v1/guides/contacts",
+      "permanent": true
+    },
+    {
+      "source": "/guides/callbacks",
+      "destination": "/v1/guides/callbacks",
+      "permanent": true
+    },
+    {
+      "source": "/api-reference/send-sms",
+      "destination": "/v1/api-reference/send-sms",
+      "permanent": true
+    },
+    {
+      "source": "/api-reference/send-rcs",
+      "destination": "/v1/api-reference/send-rcs",
+      "permanent": true
+    },
+    {
+      "source": "/api-reference/send-truecaller",
+      "destination": "/v1/api-reference/send-truecaller",
+      "permanent": true
+    },
+    {
+      "source": "/api-reference/message-status",
+      "destination": "/v1/api-reference/message-status",
+      "permanent": true
+    },
+    {
+      "source": "/api-reference/rcs-capability",
+      "destination": "/v1/api-reference/rcs-capability",
+      "permanent": true
+    },
+    {
+      "source": "/api-reference/rcs-suggestions",
+      "destination": "/v1/api-reference/rcs-suggestions",
+      "permanent": true
+    },
+    {
+      "source": "/api-reference/contacts",
+      "destination": "/v1/api-reference/contacts",
+      "permanent": true
+    },
+    {
+      "source": "/api-reference/balance",
+      "destination": "/v1/api-reference/balance",
+      "permanent": true
+    }
+  ]
 }

@@ -1,0 +1,19 @@
+---
+title: "Authenticate with Sling API v2"
+sidebarTitle: "Authentication"
+description: "Authentication guidance for the Sling API v2 documentation workspace."
+---
+
+Sling API v2 will use API tokens to authenticate requests. Until v2 endpoints are published, continue using the [v1 authentication guide](/v1/authentication) for production integrations.
+
+## API token
+
+Get your API token from [Account → API](https://app.sling.com.ng/panel/account/api) in your dashboard.
+
+## Request header
+
+Include your token in the `Authorization` header when calling Sling APIs:
+
+```bash
+Authorization: Bearer YOUR_API_TOKEN
+```
