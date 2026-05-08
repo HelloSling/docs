@@ -58,6 +58,12 @@
             "tab": "API Reference",
             "groups": [
               {
+                "group": "Overview",
+                "pages": [
+                  "v1/api-reference/overview"
+                ]
+              },
+              {
                 "group": "Messaging",
                 "pages": [
                   "v1/api-reference/send-sms",

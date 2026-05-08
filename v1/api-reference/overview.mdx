@@ -1,0 +1,30 @@
+---
+title: "Sling API v1 reference"
+sidebarTitle: "Overview"
+description: "Compact reference for Sling API v1 endpoints, authentication, request formats, and response conventions."
+---
+
+This section is the endpoint reference for Sling API v1.
+
+Use it when you need exact request fields, response fields, and endpoint URLs. For step-by-step workflows, use the [v1 documentation](/v1/introduction) and guides.
+
+## Base URL
+
+```bash
+https://app.sling.com.ng/api/v1
+```
+
+## Authentication
+
+Send your API token in the `Authorization` header:
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+
+Some v1 endpoints also support `api_token` as a query parameter for URL-based requests. Use the `Authorization` header for production integrations.
+
+## Response convention
+
+Successful responses include `status: "success"`. Failed requests include `status: "fail"` with a `details` message when available.

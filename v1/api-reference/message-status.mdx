@@ -1,99 +1,61 @@
 ---
-title: "GET /status/{message_id} — Check message status"
+title: "GET /status/{message_id}"
 sidebarTitle: "Message Status"
-description: "GET /api/v1/status/{message_id} — Retrieve the delivery status of a sent message. Returns status_delivery, credit_used, sender, and recipient fields."
+description: "GET /api/v1/status/{message_id} - Retrieve the delivery status of a sent message."
 ---
-
-Use this endpoint to check the current delivery status of any message you have sent through Sling. The `message_id` is returned in the response body when you call [Send SMS](/v1/api-reference/send-sms), [Send RCS](/v1/api-reference/send-rcs), or [Send Truecaller](/v1/api-reference/send-truecaller).
 
 ## Endpoint
 
-```
+```bash
 GET https://app.sling.com.ng/api/v1/status/{message_id}
 ```
 
 ## Headers
 
-| Header          | Value                |
-| --------------- | -------------------- |
-| `Accept`        | `application/json`   |
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
 | `Authorization` | `Bearer {API_TOKEN}` |
 
 ## Path parameters
 
 <ParamField path="message_id" type="string" required>
-  The unique message identifier returned when the message was sent. Example: `2bajqzt5tw`.
+  Message ID returned by a send endpoint.
 </ParamField>
 
-## Request example
-
-```bash cURL
-curl --request GET \
-  --url https://app.sling.com.ng/api/v1/status/2bajqzt5tw \
-  --header 'Accept: application/json' \
-  --header 'Authorization: Bearer YOUR_API_TOKEN'
-```
-
-## Responses
-
-### 200 — Success
+## Response fields
 
 <ResponseField name="status" type="string">
-  Always `"success"` when the lookup was completed.
+  `"success"` when the lookup completes.
 </ResponseField>
 
 <ResponseField name="status_delivery" type="string">
-  Current delivery state of the message. Common values include `"delivered"`, `"pending"`, and `"failed"`.
+  Current delivery state, such as `"delivered"`, `"pending"`, or `"failed"`.
 </ResponseField>
 
 <ResponseField name="message_id" type="string">
-  The message ID that was queried.
+  Message ID that was queried.
 </ResponseField>
 
 <ResponseField name="credit_used" type="string">
-  Number of credits that were deducted when this message was sent.
+  Credits deducted when the message was sent.
 </ResponseField>
 
 <ResponseField name="sender" type="string">
-  The Sender ID used to deliver the message.
+  Sender ID used for delivery.
 </ResponseField>
 
 <ResponseField name="recipient" type="string">
-  The normalised E.164 phone number the message was delivered to.
+  Normalized recipient phone number.
 </ResponseField>
 
 <ResponseField name="message_history" type="array">
-  An array of prior delivery attempts for this message, useful for diagnosing retries or failures.
+  Prior delivery attempts for the message.
 </ResponseField>
 
-```json 200 example
-{
-  "status": "success",
-  "status_delivery": "delivered",
-  "message_id": "0btn9fbaeg",
-  "credit_used": "1",
-  "sender": "13290",
-  "recipient": "2349123772222",
-  "message_history": []
-}
-```
+## Error responses
 
-### 400 — Error
-
-<CodeGroup>
-
-```json Missing message ID
-{
-  "status": "fail",
-  "details": "Message ID is required"
-}
-```
-
-```json Invalid message ID
-{
-  "status": "fail",
-  "details": "Invalid Message ID"
-}
-```
-
-</CodeGroup>
+| Status | Meaning |
+| --- | --- |
+| `400` | Missing message ID |
+| `400` | Invalid message ID |
