@@ -1,0 +1,51 @@
+---
+title: "POST /auth"
+sidebarTitle: "/auth"
+description: "POST /api/v2/auth - Exchange an email and password for an API token."
+---
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v2/auth
+```
+
+This is the only public v2 endpoint. Use it to exchange your dashboard credentials for an `api_token` you can attach as a Bearer credential to every other v2 request.
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Content-Type` | `application/json` |
+
+## Body parameters
+
+<ParamField body="email" type="string" required>
+  Account email address.
+</ParamField>
+
+<ParamField body="password" type="string" required>
+  Account password.
+</ParamField>
+
+## Response fields
+
+<ResponseField name="api_token" type="string">
+  Bearer token to use in subsequent requests.
+</ResponseField>
+
+## Example response
+
+```json
+{
+  "api_token": "1|abcd1234..."
+}
+```
+
+## Error responses
+
+| Status | Meaning |
+| --- | --- |
+| `400` | Missing email or password |
+| `400` | `"message": "Incorrect E-Mail or Password"` |

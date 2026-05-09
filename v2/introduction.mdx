@@ -1,21 +1,96 @@
 ---
-title: "Sling API v2 overview"
+title: "What is Sling? SMS, RCS, Truecaller, WhatsApp & Email API overview"
 sidebarTitle: "Introduction"
-description: "Start here for the Sling API v2 documentation workspace."
+description: "Sling API v2 is a multi-channel messaging REST API. Send SMS, RCS, Truecaller, WhatsApp, and Email from a single endpoint with one bearer token."
 ---
 
-Sling API v2 is the next version of the Sling messaging API. This workspace is reserved for v2 documentation while the current production API remains available in the v1 docs.
+Sling API v2 is the multi-channel messaging API. You authenticate once with a bearer token and reach recipients on whichever channel fits the message — SMS, RCS, Truecaller, WhatsApp, or Email. v2 also adds a universal `POST /send` endpoint, multi-recipient sends, scheduled delivery, and richer lookups for phone numbers and RCS capability.
 
-## Status
+## What's new in v2
 
-The v2 API is in development. Use the [v1 documentation](/v1/introduction) for current production endpoints until v2 is ready.
+- **Universal send endpoint** — `POST /send` routes by `channel` so one integration can deliver across SMS, RCS, Truecaller, WhatsApp, and Email.
+- **More channels** — Native endpoints for `send-whatsapp` and `send-email` join SMS, RCS, and Truecaller.
+- **Multi-recipient sends** — Each send endpoint accepts `to`, `contact`, `contacts[]`, `group`, `groups[]`, or raw `numbers` in one call.
+- **Scheduling and references** — Use `send_on` to schedule delivery and `reference` to set your own message ID.
+- **Lookups** — `POST /phone-number-check` and `POST /rcs-capability-check` return network, country, and RCS capability for any number.
+- **Account details** — `GET /details` returns the authenticated user's profile, balance, and currency.
+
+## What Sling offers
+
+- **SMS** — Transactional, promotional, and OTP text messages.
+- **RCS** — Rich messages with cards, carousels, images, and interactive suggestion chips.
+- **Truecaller messaging** — Branded, verified messages delivered through Truecaller.
+- **WhatsApp** — Business messaging through approved WhatsApp sender IDs.
+- **Email** — Transactional and promotional email through Sling's email channel.
+- **Contact management** — Create groups and add individual or bulk contacts to target with one call.
+- **Delivery status** — Look up the status of any sent message by its `message_id`.
+- **Balance API** — Read your available messaging credit and currency at any time.
+- **Form submissions** — Auto-enroll inbound form submissions into your automations.
+
+## How it works
+
+Every Sling API request follows the same pattern: include your API token in the `Authorization` header and send a JSON body to the appropriate endpoint. The API returns JSON with a `status` field (`"success"` or `"fail"`) along with channel-specific data such as `message_id`, `credit_used`, and `currency`.
+
+Authentication uses bearer tokens. Get your token from the dashboard or exchange your email and password for one through `POST /auth`.
 
 ## Base URL
 
-The planned v2 base URL is:
+All v2 endpoints share the following base URL:
 
 ```bash
 https://app.sling.com.ng/api/v2
 ```
 
-Endpoint pages will be added here as the v2 API contracts are finalized.
+Append the endpoint path to this base URL for every request. For example, to send a message you call `POST https://app.sling.com.ng/api/v2/send`.
+
+## Required headers
+
+Include these headers on every authenticated request:
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {YOUR_API_TOKEN}` |
+| `Content-Type` | `application/json` *(POST/PUT requests)* |
+
+Replace `{YOUR_API_TOKEN}` with the token from your dashboard. See [Authentication](/v2/authentication) for token instructions.
+
+## Migration from v1
+
+v2 is backwards-compatible in spirit — same bearer token, same response shape, same `status` convention — but several endpoint paths and shapes changed. Notable differences:
+
+| Area | v1 | v2 |
+| --- | --- | --- |
+| Universal sending | Not available | `POST /send` with `channel` field |
+| RCS capability | `GET /rcs/check-capability/{phone}` | `POST /rcs-capability-check` |
+| Phone lookup | Not available | `POST /phone-number-check` |
+| Account info | `balance` only | `balance` + `details` |
+| Channels | SMS, RCS, Truecaller | SMS, RCS, Truecaller, WhatsApp, Email |
+| Multi-recipient | Limited (`group`, `contact`) | `to`, `contact`, `contacts[]`, `group`, `groups[]`, `numbers` |
+| Scheduling | Not available | `send_on` parameter |
+
+The [v1 documentation](/v1/introduction) remains available for existing integrations.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="key" href="/v2/authentication">
+    Get your API token and learn how to attach it to every request.
+  </Card>
+
+  <Card title="Quick Start" icon="bolt" href="/v2/quickstart">
+    Send your first multi-channel message in under 5 minutes.
+  </Card>
+
+  <Card title="Universal send" icon="paper-plane" href="/v2/api-reference/send">
+    Use a single endpoint for SMS, RCS, Truecaller, WhatsApp, and Email.
+  </Card>
+
+  <Card title="API reference" icon="code" href="/v2/api-reference/overview">
+    Browse every v2 endpoint with request and response fields.
+  </Card>
+</CardGroup>
+
+<Note>
+  Have questions beyond the scope of this documentation? Email the Sling team at [hello@sling.com.ng](mailto:hello@sling.com.ng).
+</Note>

@@ -1,0 +1,67 @@
+---
+title: "GET /details"
+sidebarTitle: "/details"
+description: "GET /api/v2/details - Retrieve the authenticated user's profile, balance, and currency."
+---
+
+## Endpoint
+
+```bash
+GET https://app.sling.com.ng/api/v2/details
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+
+## Response fields
+
+<ResponseField name="status" type="string">
+  `"success"` when the lookup completes.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Account holder name.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Account email address.
+</ResponseField>
+
+<ResponseField name="phone" type="string">
+  Account phone number.
+</ResponseField>
+
+<ResponseField name="verified_phone" type="boolean">
+  `true` when the account phone number has been verified.
+</ResponseField>
+
+<ResponseField name="country" type="string">
+  Account country name.
+</ResponseField>
+
+<ResponseField name="currency" type="string">
+  Account currency code, such as `NGN`.
+</ResponseField>
+
+<ResponseField name="balance" type="number">
+  Current credit balance.
+</ResponseField>
+
+## Example response
+
+```json
+{
+  "status": "success",
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "phone": "2348012345678",
+  "verified_phone": true,
+  "country": "Nigeria",
+  "currency": "NGN",
+  "balance": 339
+}
+```

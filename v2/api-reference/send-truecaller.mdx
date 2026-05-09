@@ -1,0 +1,109 @@
+---
+title: "POST /send-truecaller"
+sidebarTitle: "/send-truecaller"
+description: "POST /api/v2/send-truecaller - Send a branded Truecaller message."
+---
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v2/send-truecaller
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` |
+
+## Body parameters
+
+<ParamField body="message" type="string" required>
+  Message text. Up to 3 pages.
+</ParamField>
+
+<ParamField body="sender" type="string" required>
+  Approved Truecaller sender ID or brand name.
+</ParamField>
+
+<ParamField body="type" type="string">
+  Sender ID route. Accepted values: `transactional` or `promotional`.
+</ParamField>
+
+<ParamField body="callback" type="string">
+  Public HTTPS URL that receives delivery updates.
+</ParamField>
+
+<ParamField body="instant" type="boolean" default="false">
+  When `true`, the request waits for immediate processing and the response includes the resolved `status` and `credit_used`. When `false`, the message is queued.
+</ParamField>
+
+<ParamField body="reference" type="string">
+  Custom message ID.
+</ParamField>
+
+<ParamField body="send_on" type="string">
+  ISO datetime to schedule the message.
+</ParamField>
+
+### Recipient (provide exactly one)
+
+<ParamField body="to" type="string">
+  Recipient phone number.
+</ParamField>
+
+<ParamField body="contact" type="string">
+  Saved contact ID.
+</ParamField>
+
+<ParamField body="contacts" type="array">
+  Array of saved contact IDs.
+</ParamField>
+
+<ParamField body="group" type="string">
+  Single group ID.
+</ParamField>
+
+<ParamField body="groups" type="array">
+  Array of group IDs.
+</ParamField>
+
+<ParamField body="numbers" type="string">
+  Newline-separated raw phone numbers.
+</ParamField>
+
+## Response fields
+
+<ResponseField name="status" type="string">
+  `"success"` when the message is accepted.
+</ResponseField>
+
+<ResponseField name="message_id" type="string">
+  Unique message ID. Use it with [Message Status](/v2/api-reference/message-status).
+</ResponseField>
+
+<ResponseField name="sender" type="string">
+  Sender ID or brand name used for delivery.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Message text.
+</ResponseField>
+
+<ResponseField name="recipient" type="string">
+  Normalized recipient phone number.
+</ResponseField>
+
+<ResponseField name="credit_used" type="number">
+  Credits deducted for this message.
+</ResponseField>
+
+## Error responses
+
+| Status | Meaning |
+| --- | --- |
+| `400` | Missing or invalid request fields |
+| `400` | Insufficient credit |
+| `400` | Sender not approved for Truecaller |

@@ -1,0 +1,136 @@
+---
+title: "Contacts API"
+sidebarTitle: "Contacts endpoints"
+description: "Reference for Sling API v2 contact and group endpoints."
+---
+
+Manage groups and contacts so you can target lists with one send call. Group and contact IDs returned here can be used as `group`, `groups[]`, `contact`, or `contacts[]` on any [send endpoint](/v2/api-reference/send).
+
+## Headers
+
+All Contacts API endpoints use the same headers.
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` *(POST)* |
+
+## Endpoints
+
+| Method | Path | Description |
+| --- | --- | --- |
+| `GET` | `/groups` | List contact groups |
+| `GET` | `/group-contacts/{groupid}` | List contacts in a group |
+| `POST` | `/create-group` | Create a contact group |
+| `POST` | `/add-contact` | Add one contact |
+| `POST` | `/add-contacts` | Add multiple contacts |
+| `POST` | `/update-contact/{contactid}` | Update one contact |
+
+## GET /groups
+
+```bash
+GET https://app.sling.com.ng/api/v2/groups
+```
+
+Returns the contact groups in your account.
+
+## GET /group-contacts/{groupid}
+
+```bash
+GET https://app.sling.com.ng/api/v2/group-contacts/{groupid}
+```
+
+<ParamField path="groupid" type="string" required>
+  Group ID. Use `0` or `standalone` for ungrouped contacts.
+</ParamField>
+
+Returns contacts assigned to the group.
+
+## POST /create-group
+
+```bash
+POST https://app.sling.com.ng/api/v2/create-group
+```
+
+<ParamField body="name" type="string" required>
+  Group name.
+</ParamField>
+
+## POST /add-contact
+
+```bash
+POST https://app.sling.com.ng/api/v2/add-contact
+```
+
+<ParamField body="name" type="string" required>
+  Contact name.
+</ParamField>
+
+<ParamField body="phone" type="string" required>
+  Contact phone number.
+</ParamField>
+
+<ParamField body="email" type="string">
+  Contact email address. Used by the Email channel.
+</ParamField>
+
+<ParamField body="group_id" type="string">
+  Group ID to assign the contact to.
+</ParamField>
+
+## POST /add-contacts
+
+```bash
+POST https://app.sling.com.ng/api/v2/add-contacts
+```
+
+<ParamField body="contacts" type="array" required>
+  Contact objects to create.
+
+  <Expandable title="contact object properties">
+    <ParamField body="name" type="string" required>
+      Contact name.
+    </ParamField>
+    <ParamField body="phone" type="string" required>
+      Contact phone number.
+    </ParamField>
+    <ParamField body="email" type="string">
+      Contact email address.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="group_id" type="string">
+  Group ID to assign all contacts to.
+</ParamField>
+
+## POST /update-contact/{contactid}
+
+```bash
+POST https://app.sling.com.ng/api/v2/update-contact/{contactid}
+```
+
+<ParamField path="contactid" type="string" required>
+  Contact ID.
+</ParamField>
+
+<ParamField body="name" type="string">
+  Updated contact name.
+</ParamField>
+
+<ParamField body="phone" type="string">
+  Updated contact phone number.
+</ParamField>
+
+<ParamField body="email" type="string">
+  Updated contact email address.
+</ParamField>
+
+<ParamField body="group_id" type="string">
+  Group ID to assign the contact to.
+</ParamField>
+
+## Response convention
+
+Contacts endpoints return `status: "success"` when the operation completes. Error responses return `status: "fail"` with a `details` message when available.

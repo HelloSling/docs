@@ -1,0 +1,132 @@
+---
+title: "POST /send"
+sidebarTitle: "/send (universal)"
+description: "POST /api/v2/send - Universal send endpoint. Route by channel to deliver SMS, RCS, Truecaller, WhatsApp, or Email from a single URL."
+---
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v2/send
+```
+
+The universal send endpoint routes the request to the channel handler based on the `channel` field. Use it when you want a single URL for every channel; use the channel-specific endpoints when you prefer explicit URLs.
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` |
+
+## Body parameters
+
+<ParamField body="channel" type="string" required>
+  Delivery channel. Accepted values: `sms`, `rcs`, `truecaller`, `whatsapp`, `email`.
+</ParamField>
+
+<ParamField body="sender" type="string" required>
+  Approved sender ID for the chosen channel. You can pass the sender label or the sender ID record ID.
+</ParamField>
+
+<ParamField body="message" type="string">
+  Message text content. Required for SMS, Truecaller, WhatsApp, and Email. Optional for RCS when sending a card or carousel without text.
+</ParamField>
+
+<ParamField body="type" type="string">
+  Sender ID route. Accepted values: `transactional`, `promotional`, `otp`. Defaults to `transactional`.
+</ParamField>
+
+<ParamField body="callback" type="string">
+  Public HTTPS URL that receives delivery updates.
+</ParamField>
+
+<ParamField body="reference" type="string">
+  Custom message ID. When provided, this value is used in place of the auto-generated `message_id`.
+</ParamField>
+
+<ParamField body="send_on" type="string">
+  ISO datetime to schedule the message. When set in the future, delivery is queued until that time.
+</ParamField>
+
+<ParamField body="campaign_name" type="string">
+  Label applied to multi-recipient campaigns. Visible in your dashboard.
+</ParamField>
+
+<ParamField body="mode" type="string">
+  `single` or `campaign`. Defaults to `single` for one recipient and `campaign` for multi-recipient sends.
+</ParamField>
+
+### Recipient (provide exactly one)
+
+<ParamField body="to" type="string">
+  Single phone number or email address.
+</ParamField>
+
+<ParamField body="contact" type="string">
+  Saved contact ID.
+</ParamField>
+
+<ParamField body="contacts" type="array">
+  Array of saved contact IDs.
+</ParamField>
+
+<ParamField body="group" type="string">
+  Single group ID. Use `0` for standalone (ungrouped) contacts.
+</ParamField>
+
+<ParamField body="groups" type="array">
+  Array of group IDs. Use `"standalone"` to include ungrouped contacts.
+</ParamField>
+
+<ParamField body="numbers" type="string">
+  Newline-separated raw phone numbers to send to without saving as contacts.
+</ParamField>
+
+### Channel-specific fields
+
+For RCS, Truecaller, WhatsApp, and Email payloads, see the channel-specific reference pages:
+
+- [/send-sms](/v2/api-reference/send-sms)
+- [/send-rcs](/v2/api-reference/send-rcs)
+- [/send-truecaller](/v2/api-reference/send-truecaller)
+- [/send-whatsapp](/v2/api-reference/send-whatsapp)
+- [/send-email](/v2/api-reference/send-email)
+
+## Response
+
+The response shape matches the channel-specific endpoint for the resolved `channel`. Single-recipient sends return a `message_id` and `status_delivery`. Multi-recipient sends return a bulk `message_id` (prefixed with `m-`) and a campaign `id`.
+
+```json Single recipient
+{
+  "status": "success",
+  "status_delivery": "delivered",
+  "message_id": "2bajqzt5tw",
+  "sender": "YourSenderID",
+  "message": "Hello",
+  "recipient": "2349123772222",
+  "credit_used": 1
+}
+```
+
+```json Multi recipient
+{
+  "status": "success",
+  "message_id": "m-9q2hxk",
+  "sender": "YourSenderID",
+  "message": "Hello",
+  "credit_used": 25,
+  "id": 142
+}
+```
+
+## Error responses
+
+| Status | Meaning |
+| --- | --- |
+| `400` | `Unsupported delivery channel: {channel}` |
+| `400` | Missing or invalid request fields |
+| `400` | Insufficient credit |
+| `400` | Sender not approved for this channel |
+| `403` | Phone not verified for the account |

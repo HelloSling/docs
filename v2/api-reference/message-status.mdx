@@ -1,0 +1,92 @@
+---
+title: "GET /status/{message_id}"
+sidebarTitle: "/status/{message_id}"
+description: "GET /api/v2/status/{message_id} - Retrieve the delivery status and history of a sent message."
+---
+
+## Endpoint
+
+```bash
+GET https://app.sling.com.ng/api/v2/status/{message_id}
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+
+## Path parameters
+
+<ParamField path="message_id" type="string" required>
+  Message ID returned by a send endpoint.
+</ParamField>
+
+## Response fields
+
+<ResponseField name="status" type="string">
+  Internal log status, such as `"sent"` or `"failed"`.
+</ResponseField>
+
+<ResponseField name="status_delivery" type="string">
+  Provider delivery state, such as `"delivered"`, `"pending"`, or `"failed"`.
+</ResponseField>
+
+<ResponseField name="message_id" type="string">
+  Message ID that was queried.
+</ResponseField>
+
+<ResponseField name="credit_used" type="number">
+  Credits deducted when the message was sent.
+</ResponseField>
+
+<ResponseField name="sender" type="string">
+  Sender ID used for delivery.
+</ResponseField>
+
+<ResponseField name="recipient" type="string">
+  Normalized recipient phone number or email.
+</ResponseField>
+
+<ResponseField name="message_history" type="array">
+  Ordered status events for the message, newest first.
+
+  <Expandable title="message_history item">
+    <ResponseField name="status" type="string">
+      Status at the time of the event.
+    </ResponseField>
+    <ResponseField name="datetime" type="string">
+      Timestamp of the event.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="updated_at" type="string">
+  Timestamp of the most recent update to this message log.
+</ResponseField>
+
+## Example response
+
+```json
+{
+  "status": "sent",
+  "status_delivery": "delivered",
+  "message_id": "2bajqzt5tw",
+  "credit_used": 1,
+  "sender": "YourSenderID",
+  "recipient": "2349123772222",
+  "message_history": [
+    { "status": "delivered", "datetime": "2026-05-09T12:34:56Z" },
+    { "status": "sent", "datetime": "2026-05-09T12:34:50Z" }
+  ],
+  "updated_at": "2026-05-09T12:34:56Z"
+}
+```
+
+## Error responses
+
+| Status | Meaning |
+| --- | --- |
+| `400` | Missing message ID — `"details": "Message ID is required"` |
+| `400` | Invalid message ID — `"details": "Invalid Message ID"` |

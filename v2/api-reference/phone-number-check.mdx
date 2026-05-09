@@ -1,0 +1,62 @@
+---
+title: "POST /phone-number-check"
+sidebarTitle: "/phone-number-check"
+description: "POST /api/v2/phone-number-check - Detect the network and country for a phone number."
+---
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v2/phone-number-check
+```
+
+Use this endpoint to normalize a phone number and detect its country and mobile network operator before sending.
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` |
+
+## Body parameters
+
+<ParamField body="phone" type="string" required>
+  Phone number to check. Accepts local format (`08140363541`), country code (`2348140363541`), or `+` prefix (`+2348140363541`).
+</ParamField>
+
+## Response fields
+
+<ResponseField name="status" type="string">
+  `"success"` when the lookup completes.
+</ResponseField>
+
+<ResponseField name="number" type="string">
+  Normalized phone number.
+</ResponseField>
+
+<ResponseField name="network" type="string">
+  Detected mobile network, such as `MTN`, `GLO`, `AIRTEL`, or `ETISALAT`.
+</ResponseField>
+
+<ResponseField name="country" type="string">
+  Detected country name or ISO code.
+</ResponseField>
+
+## Example response
+
+```json
+{
+  "status": "success",
+  "number": "2348140363541",
+  "network": "MTN",
+  "country": "Nigeria"
+}
+```
+
+## Error responses
+
+| Status | Meaning |
+| --- | --- |
+| `400` | Phone number is missing — `"details": "Phone Number is required"` |

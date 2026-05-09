@@ -1,0 +1,42 @@
+---
+title: "GET /balance"
+sidebarTitle: "/balance"
+description: "GET /api/v2/balance - Retrieve the current credit balance and currency for your Sling account."
+---
+
+## Endpoint
+
+```bash
+GET https://app.sling.com.ng/api/v2/balance
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+
+## Response fields
+
+<ResponseField name="status" type="string">
+  `"success"` when the balance is retrieved.
+</ResponseField>
+
+<ResponseField name="balance" type="number">
+  Current credit balance.
+</ResponseField>
+
+<ResponseField name="currency" type="string">
+  Account currency code, such as `NGN`.
+</ResponseField>
+
+## Example response
+
+```json
+{
+  "status": "success",
+  "balance": 339,
+  "currency": "NGN"
+}
+```

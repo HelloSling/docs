@@ -116,9 +116,53 @@
             "tab": "API Reference",
             "groups": [
               {
-                "group": "API Reference",
+                "group": "Overview",
                 "pages": [
                   "v2/api-reference/overview"
+                ]
+              },
+              {
+                "group": "Authentication",
+                "pages": [
+                  "v2/api-reference/auth"
+                ]
+              },
+              {
+                "group": "Account",
+                "pages": [
+                  "v2/api-reference/details",
+                  "v2/api-reference/balance"
+                ]
+              },
+              {
+                "group": "Messaging",
+                "pages": [
+                  "v2/api-reference/send",
+                  "v2/api-reference/send-sms",
+                  "v2/api-reference/send-rcs",
+                  "v2/api-reference/send-truecaller",
+                  "v2/api-reference/send-whatsapp",
+                  "v2/api-reference/send-email",
+                  "v2/api-reference/message-status"
+                ]
+              },
+              {
+                "group": "Lookups",
+                "pages": [
+                  "v2/api-reference/phone-number-check",
+                  "v2/api-reference/rcs-capability-check"
+                ]
+              },
+              {
+                "group": "Contacts",
+                "pages": [
+                  "v2/api-reference/contacts"
+                ]
+              },
+              {
+                "group": "Forms",
+                "pages": [
+                  "v2/api-reference/forms-submit"
                 ]
               }
             ]

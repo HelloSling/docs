@@ -1,19 +1,117 @@
 ---
-title: "Get started with Sling API v2"
+title: "Get started with Sling API v2: send your first message"
 sidebarTitle: "Quick Start"
-description: "A placeholder quick start for the Sling API v2 documentation workspace."
+description: "Send your first message with Sling API v2 in under 5 minutes. Get a token, register a sender ID, send via /send or /send-sms, and verify delivery."
 ---
 
-The Sling API v2 quick start will be added when the first v2 endpoints are ready for integration.
+This guide walks you through sending your first message using Sling API v2. You will get your API token, register a sender ID, send a message, and confirm delivery — all in a few minutes.
 
-For production messaging today, follow the [v1 quick start](/v1/quickstart).
+<Steps>
+  <Step title="Get your API token">
+    Log in to your dashboard and visit [Account → API](https://app.sling.com.ng/panel/account/api) to copy your API token.
 
-## What to expect
+    You can also exchange an email and password for a token through [POST /auth](/v2/api-reference/auth):
 
-The v2 quick start will cover:
+    ```bash cURL
+    curl --request POST \
+      --url https://app.sling.com.ng/api/v2/auth \
+      --header "Accept: application/json" \
+      --header "Content-Type: application/json" \
+      --data '{ "email": "you@example.com", "password": "your-password" }'
+    ```
 
-- Getting your API token
-- Calling the v2 base URL
-- Sending your first message
-- Checking delivery status
+    See [Authentication](/v2/authentication) for a detailed walkthrough.
+  </Step>
 
+  <Step title="Register a sender ID">
+    A sender ID is the name or number your recipients see as the message source. You must register one before sending.
+
+    Visit [Sender IDs](https://app.sling.com.ng/panel/sender-ids) in your dashboard to register a sender ID. Once approved, use that name as the `sender` value in your API requests. Each channel (SMS, RCS, Truecaller, WhatsApp, Email) requires its own approved sender.
+  </Step>
+
+  <Step title="Send your first message">
+    The fastest path is the universal endpoint, which routes by `channel`:
+
+    ```bash cURL
+    curl --request POST \
+      --url https://app.sling.com.ng/api/v2/send \
+      --header "Accept: application/json" \
+      --header "Authorization: Bearer YOUR_API_TOKEN" \
+      --header "Content-Type: application/json" \
+      --data '{
+        "channel": "sms",
+        "to": "2349123772222",
+        "message": "Hello, from Sling v2!",
+        "sender": "YourSenderID"
+      }'
+    ```
+
+    Set `channel` to `sms`, `rcs`, `truecaller`, `whatsapp`, or `email` to switch channels without changing the URL.
+
+    A successful single-recipient request returns `200 OK` with a body similar to:
+
+    ```json
+    {
+      "status": "success",
+      "status_delivery": "delivered",
+      "message_id": "2bajqzt5tw",
+      "sender": "YourSenderID",
+      "message": "Hello, from Sling v2!",
+      "recipient": "2349123772222",
+      "credit_used": 1
+    }
+    ```
+
+    Save the `message_id` value — you will need it to check delivery status.
+
+    <Note>
+      Each message consumes credit from your balance. The `credit_used` field tells you how many credits were deducted. Check your remaining balance any time with [GET /balance](/v2/api-reference/balance).
+    </Note>
+  </Step>
+
+  <Step title="Check message status">
+    Use your `message_id` to confirm delivery:
+
+    ```bash cURL
+    curl --request GET \
+      --url https://app.sling.com.ng/api/v2/status/2bajqzt5tw \
+      --header "Accept: application/json" \
+      --header "Authorization: Bearer YOUR_API_TOKEN"
+    ```
+
+    A successful response looks like this:
+
+    ```json
+    {
+      "status": "sent",
+      "status_delivery": "delivered",
+      "message_id": "2bajqzt5tw",
+      "credit_used": 1,
+      "sender": "YourSenderID",
+      "recipient": "2349123772222",
+      "message_history": [
+        { "status": "delivered", "datetime": "2026-05-09T12:34:56Z" }
+      ],
+      "updated_at": "2026-05-09T12:34:56Z"
+    }
+    ```
+
+    The `status_delivery` field confirms whether the message reached the recipient's handset.
+  </Step>
+</Steps>
+
+## Next steps
+
+You have sent your first v2 message. Explore the rest of the API to add richer messaging to your application:
+
+<CardGroup cols={3}>
+  <Card title="Universal send" icon="paper-plane" href="/v2/api-reference/send">
+    Use one endpoint for SMS, RCS, Truecaller, WhatsApp, and Email.
+  </Card>
+  <Card title="Send RCS" icon="comment-dots" href="/v2/api-reference/send-rcs">
+    Cards, carousels, images, and interactive suggestions.
+  </Card>
+  <Card title="Contacts" icon="address-book" href="/v2/api-reference/contacts">
+    Manage groups and contacts to target lists with one call.
+  </Card>
+</CardGroup>

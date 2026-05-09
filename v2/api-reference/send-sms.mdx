@@ -1,0 +1,143 @@
+---
+title: "POST /send-sms"
+sidebarTitle: "/send-sms"
+description: "POST /api/v2/send-sms - Send an SMS to a phone number, contact, group, or list of numbers."
+---
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v2/send-sms
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` |
+
+## Body parameters
+
+<ParamField body="message" type="string" required>
+  SMS text content. Up to 3 pages (approximately 480 characters).
+</ParamField>
+
+<ParamField body="sender" type="string" required>
+  Approved Sender ID. Pass the sender label or sender ID record ID.
+</ParamField>
+
+<ParamField body="type" type="string">
+  Sender ID route. Accepted values: `transactional`, `promotional`, `otp`. Defaults to `transactional`. Messages containing `OTP` or `One Time` are forced to `transactional`.
+</ParamField>
+
+<ParamField body="callback" type="string">
+  Public HTTPS URL that receives delivery updates.
+</ParamField>
+
+<ParamField body="reference" type="string">
+  Custom message ID. When provided, this value is used in place of the auto-generated `message_id`.
+</ParamField>
+
+<ParamField body="send_on" type="string">
+  ISO datetime to schedule the message.
+</ParamField>
+
+<ParamField body="campaign_name" type="string">
+  Label applied to multi-recipient campaigns.
+</ParamField>
+
+### Recipient (provide exactly one)
+
+<ParamField body="to" type="string">
+  Recipient phone number. Accepts local format (`08140363541`), country code (`2348140363541`), or `+` prefix (`+2348140363541`).
+</ParamField>
+
+<ParamField body="contact" type="string">
+  Saved contact ID.
+</ParamField>
+
+<ParamField body="contacts" type="array">
+  Array of saved contact IDs.
+</ParamField>
+
+<ParamField body="group" type="string">
+  Single group ID. Use `0` for standalone (ungrouped) contacts.
+</ParamField>
+
+<ParamField body="groups" type="array">
+  Array of group IDs. Use `"standalone"` to include ungrouped contacts.
+</ParamField>
+
+<ParamField body="numbers" type="string">
+  Newline-separated raw phone numbers.
+</ParamField>
+
+## Response fields
+
+### Single recipient
+
+<ResponseField name="status" type="string">
+  `"success"` when the message is accepted.
+</ResponseField>
+
+<ResponseField name="status_delivery" type="string">
+  Delivery state, such as `"delivered"`, `"pending"`, or `"failed"`.
+</ResponseField>
+
+<ResponseField name="message_id" type="string">
+  Unique message ID. Use it with [Message Status](/v2/api-reference/message-status).
+</ResponseField>
+
+<ResponseField name="sender" type="string">
+  Sender ID used for delivery.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Message text.
+</ResponseField>
+
+<ResponseField name="recipient" type="string">
+  Normalized recipient phone number.
+</ResponseField>
+
+<ResponseField name="credit_used" type="number">
+  Credits deducted for this message.
+</ResponseField>
+
+### Multi-recipient
+
+<ResponseField name="status" type="string">
+  `"success"` when the campaign is accepted.
+</ResponseField>
+
+<ResponseField name="message_id" type="string">
+  Bulk message ID, prefixed with `m-`.
+</ResponseField>
+
+<ResponseField name="sender" type="string">
+  Sender ID used for delivery.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Message text.
+</ResponseField>
+
+<ResponseField name="credit_used" type="number">
+  Total credits deducted for the campaign.
+</ResponseField>
+
+<ResponseField name="id" type="number">
+  Bulk log ID for the campaign.
+</ResponseField>
+
+## Error responses
+
+| Status | Meaning |
+| --- | --- |
+| `400` | Missing or invalid request fields |
+| `400` | Insufficient credit |
+| `400` | Sender not approved for SMS |
+| `400` | `Payload must contain to, contact, contacts, group, groups, or numbers` |
+| `400` | Message contains a blocked keyword for the sender |

@@ -1,12 +1,12 @@
 ---
 title: "Sling API v2 reference"
 sidebarTitle: "Overview"
-description: "API reference workspace for Sling API v2 endpoints."
+description: "Compact reference for Sling API v2 endpoints, authentication, channels, request shapes, and response conventions."
 ---
 
-This area will contain the Sling API v2 endpoint reference.
+This section is the endpoint reference for Sling API v2.
 
-The current production endpoints are documented in the [v1 API reference](/v1/api-reference/overview).
+Use it when you need exact request fields, response fields, and endpoint URLs. For step-by-step workflows, see the [v2 documentation](/v2/introduction).
 
 ## Base URL
 
@@ -14,6 +14,107 @@ The current production endpoints are documented in the [v1 API reference](/v1/ap
 https://app.sling.com.ng/api/v2
 ```
 
-## Endpoint status
+## Authentication
 
-No v2 endpoints have been published in this workspace yet. Add each endpoint page here as its request and response contract is finalized.
+Send your API token in the `Authorization` header on every authenticated request:
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` *(POST/PUT)* |
+
+The only public route is [POST /auth](/v2/api-reference/auth), which exchanges email and password for a token.
+
+## Channels
+
+The send endpoints support the following channels:
+
+| Channel | Slug | Endpoint | Notes |
+| --- | --- | --- | --- |
+| SMS | `sms` | [/send-sms](/v2/api-reference/send-sms) | Transactional, promotional, OTP |
+| RCS | `rcs` | [/send-rcs](/v2/api-reference/send-rcs) | Text, standalone card, carousel |
+| Truecaller | `truecaller` | [/send-truecaller](/v2/api-reference/send-truecaller) | Branded verified messages |
+| WhatsApp | `whatsapp` | [/send-whatsapp](/v2/api-reference/send-whatsapp) | Approved business sender |
+| Email | `email` | [/send-email](/v2/api-reference/send-email) | Transactional & promotional |
+
+You can also use the universal [POST /send](/v2/api-reference/send) endpoint and switch channels with the `channel` field.
+
+## Recipient targeting
+
+Every send endpoint accepts one of the following recipient inputs:
+
+| Field | Type | Use case |
+| --- | --- | --- |
+| `to` | string | Single phone number or email |
+| `contact` | string | Saved contact ID |
+| `contacts` | array | Multiple saved contact IDs |
+| `group` | string | Single group ID |
+| `groups` | array | Multiple group IDs (use `"standalone"` for ungrouped contacts) |
+| `numbers` | string | Newline-separated raw phone numbers |
+
+When more than one recipient is provided (`contacts`, `groups`, `numbers`, etc.), the request is treated as a campaign and queued through Sling's bulk job pipeline.
+
+## Common request fields
+
+Beyond the recipient inputs, send endpoints share a common shape:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `sender` | string | Approved sender ID or sender ID record ID |
+| `message` | string | Message text content |
+| `type` | string | `transactional`, `promotional`, or `otp` |
+| `callback` | string | Public HTTPS URL that receives delivery updates |
+| `reference` | string | Custom message ID. Used in place of the auto-generated `message_id` |
+| `send_on` | string | ISO datetime to schedule the message for later delivery |
+| `campaign_name` | string | Label for multi-recipient campaigns |
+| `mode` | string | `single` or `campaign` (multi-recipient) |
+
+## Response convention
+
+Successful single-recipient sends return:
+
+```json
+{
+  "status": "success",
+  "status_delivery": "delivered",
+  "message_id": "abc123",
+  "sender": "YourSenderID",
+  "message": "Hello",
+  "recipient": "2349123772222",
+  "credit_used": 1
+}
+```
+
+Successful multi-recipient sends return:
+
+```json
+{
+  "status": "success",
+  "message_id": "m-abc123",
+  "sender": "YourSenderID",
+  "message": "Hello",
+  "credit_used": 25,
+  "id": 142
+}
+```
+
+Failed requests return `status: "fail"` with a `message` or `details` field describing the cause:
+
+```json
+{
+  "status": "fail",
+  "message": "Insufficient credit"
+}
+```
+
+## Error codes
+
+| Status | Meaning |
+| --- | --- |
+| `400` | Missing or invalid request fields |
+| `400` | Insufficient credit |
+| `400` | Invalid sender ID or no permission to use it |
+| `401` | Missing or invalid `Authorization` header |
+| `403` | Phone not verified for the account |
+| `404` | Resource not found (group, contact, message ID) |

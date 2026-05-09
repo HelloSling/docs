@@ -1,0 +1,296 @@
+---
+title: "POST /send-rcs"
+sidebarTitle: "/send-rcs"
+description: "POST /api/v2/send-rcs - Send an RCS text, standalone card, or carousel with interactive suggestion chips."
+---
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v2/send-rcs
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` |
+
+## Body parameters
+
+<ParamField body="sender" type="string" required>
+  Approved RCS Sender ID.
+</ParamField>
+
+<ParamField body="type" type="string">
+  Sender ID route. Accepted values: `transactional` or `promotional`. Defaults to `transactional`.
+</ParamField>
+
+<ParamField body="template_type" type="string" required>
+  RCS content type. Accepted values: `text`, `standalone`, or `carousel`.
+</ParamField>
+
+<ParamField body="message" type="string">
+  Text message body. Required when `template_type` is `text`.
+</ParamField>
+
+<ParamField body="fallback_sms" type="boolean" default="false">
+  When `true`, Sling falls back to SMS if the recipient does not support RCS.
+</ParamField>
+
+<ParamField body="suggestions" type="array">
+  Interactive suggestion chip objects. See [Suggestion object](#suggestion-object) below.
+</ParamField>
+
+<ParamField body="standalone" type="object">
+  Required when `template_type` is `standalone`.
+
+  <Expandable title="standalone properties">
+    <ParamField body="title" type="string" required>
+      Card title.
+    </ParamField>
+    <ParamField body="description" type="string" required>
+      Card description.
+    </ParamField>
+    <ParamField body="image" type="string" required>
+      Public image URL.
+    </ParamField>
+    <ParamField body="orientation" type="string" required>
+      Accepted values: `VERTICAL` or `HORIZONTAL`.
+    </ParamField>
+    <ParamField body="alignment" type="string">
+      Accepted values: `LEFT` or `RIGHT`.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="carousel" type="array">
+  Required when `template_type` is `carousel`.
+
+  <Expandable title="carousel item properties">
+    <ParamField body="title" type="string" required>
+      Card title.
+    </ParamField>
+    <ParamField body="description" type="string" required>
+      Card description.
+    </ParamField>
+    <ParamField body="image" type="string" required>
+      Public image URL.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="callback" type="string">
+  Public HTTPS URL that receives delivery updates.
+</ParamField>
+
+<ParamField body="reference" type="string">
+  Custom message ID.
+</ParamField>
+
+<ParamField body="send_on" type="string">
+  ISO datetime to schedule the message.
+</ParamField>
+
+### Recipient (provide exactly one)
+
+<ParamField body="to" type="string">
+  Recipient phone number.
+</ParamField>
+
+<ParamField body="contact" type="string">
+  Saved contact ID.
+</ParamField>
+
+<ParamField body="contacts" type="array">
+  Array of saved contact IDs.
+</ParamField>
+
+<ParamField body="group" type="string">
+  Single group ID.
+</ParamField>
+
+<ParamField body="groups" type="array">
+  Array of group IDs.
+</ParamField>
+
+<ParamField body="numbers" type="string">
+  Newline-separated raw phone numbers.
+</ParamField>
+
+## Suggestion object
+
+Use `suggestions` to add interactive chips. Every suggestion object includes:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `type` | string | Yes | Suggestion type |
+| `text` | string | Yes | Label shown on the chip |
+| `postback` | string | Yes | Value sent back when the user taps the chip |
+
+### Suggestion types
+
+<AccordionGroup>
+  <Accordion title="reply">
+    | Field | Type | Required |
+    | --- | --- | --- |
+    | `type` | string | Yes, must be `reply` |
+    | `text` | string | Yes |
+    | `postback` | string | Yes |
+
+    ```json
+    {
+      "type": "reply",
+      "text": "Yes",
+      "postback": "yes"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="url">
+    | Field | Type | Required |
+    | --- | --- | --- |
+    | `type` | string | Yes, must be `url` |
+    | `text` | string | Yes |
+    | `postback` | string | Yes |
+    | `url` | string | Yes |
+
+    ```json
+    {
+      "type": "url",
+      "text": "Open link",
+      "postback": "open_link",
+      "url": "https://example.com"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="dialer">
+    | Field | Type | Required |
+    | --- | --- | --- |
+    | `type` | string | Yes, must be `dialer` |
+    | `text` | string | Yes |
+    | `postback` | string | Yes |
+    | `phone` | string | Yes |
+
+    ```json
+    {
+      "type": "dialer",
+      "text": "Call",
+      "postback": "call",
+      "phone": "0802222222"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="location_latlng">
+    | Field | Type | Required |
+    | --- | --- | --- |
+    | `type` | string | Yes, must be `location_latlng` |
+    | `text` | string | Yes |
+    | `postback` | string | Yes |
+    | `lat` | string | Yes |
+    | `lng` | string | Yes |
+    | `label` | string | Yes |
+
+    ```json
+    {
+      "type": "location_latlng",
+      "text": "View location",
+      "postback": "location",
+      "lat": "6.5244",
+      "lng": "3.3792",
+      "label": "Sling HQ"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="location_query">
+    | Field | Type | Required |
+    | --- | --- | --- |
+    | `type` | string | Yes, must be `location_query` |
+    | `text` | string | Yes |
+    | `postback` | string | Yes |
+    | `query` | string | Yes |
+
+    ```json
+    {
+      "type": "location_query",
+      "text": "Find us",
+      "postback": "location",
+      "query": "Sling Lagos Nigeria"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="share_location">
+    | Field | Type | Required |
+    | --- | --- | --- |
+    | `type` | string | Yes, must be `share_location` |
+    | `text` | string | Yes |
+    | `postback` | string | Yes |
+
+    ```json
+    {
+      "type": "share_location",
+      "text": "Send location",
+      "postback": "send_location"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="calendar_event">
+    | Field | Type | Required |
+    | --- | --- | --- |
+    | `type` | string | Yes, must be `calendar_event` |
+    | `text` | string | Yes |
+    | `postback` | string | Yes |
+    | `datetime` | string | Yes |
+    | `title` | string | Yes |
+    | `description` | string | Yes |
+
+    ```json
+    {
+      "type": "calendar_event",
+      "text": "Save date",
+      "postback": "save_date",
+      "datetime": "2026-05-27T01:02",
+      "title": "Sling Meeting",
+      "description": "Meeting details"
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Response fields
+
+<ResponseField name="status" type="string">
+  `"success"` when the message is accepted.
+</ResponseField>
+
+<ResponseField name="message_id" type="string">
+  Unique message ID. Use it with [Message Status](/v2/api-reference/message-status).
+</ResponseField>
+
+<ResponseField name="sender" type="string">
+  Sender ID used for delivery.
+</ResponseField>
+
+<ResponseField name="recipient" type="string">
+  Normalized recipient phone number.
+</ResponseField>
+
+<ResponseField name="credit_used" type="number">
+  Credits deducted for this message.
+</ResponseField>
+
+## Error responses
+
+| Status | Meaning |
+| --- | --- |
+| `400` | Missing or invalid request fields |
+| `400` | Insufficient credit |
+| `400` | `This number is RCS disabled. You cannot send an RCS Message` (when fallback is off) |
+| `400` | Sender not approved for RCS |

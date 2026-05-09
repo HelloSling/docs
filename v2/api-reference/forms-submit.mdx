@@ -1,0 +1,80 @@
+---
+title: "POST /forms/{formId}/submit"
+sidebarTitle: "/forms/{formId}/submit"
+description: "POST /api/v2/forms/{formId}/submit - Submit form data and auto-enroll the contact into mapped automations."
+---
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v2/forms/{formId}/submit
+```
+
+Submit form data on behalf of a contact. The endpoint resolves or creates a contact based on the submitted fields, stores the form response, and enrolls the contact into any active automations mapped to the form.
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` |
+
+## Path parameters
+
+<ParamField path="formId" type="integer" required>
+  ID of the active form to submit to.
+</ParamField>
+
+## Body parameters
+
+You can submit form data in two ways. Pick the one that matches how your form is built.
+
+<ParamField body="data" type="object">
+  Map of form field keys to values. Use this when your form fields are namespaced or you want to keep submission metadata separate from the payload.
+
+  ```json
+  {
+    "data": {
+      "name": "Jane Doe",
+      "email": "jane@example.com",
+      "phone": "2348012345678",
+      "interest": "RCS"
+    }
+  }
+  ```
+</ParamField>
+
+If `data` is not provided, every other field in the JSON body (excluding `_token` and `_method`) is treated as a form field. Empty and `null` values are stripped before processing.
+
+## Response fields
+
+<ResponseField name="success" type="boolean">
+  `true` when the submission is accepted.
+</ResponseField>
+
+<ResponseField name="entries_created" type="integer">
+  Number of automation entries created from this submission.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Human-readable status. Present when no automations are mapped to the form, e.g. `"Form submitted. No automations mapped."`.
+</ResponseField>
+
+## Example response
+
+```json
+{
+  "success": true,
+  "entries_created": 2
+}
+```
+
+## Error responses
+
+| Status | Meaning |
+| --- | --- |
+| `404` | Form not found or not active |
+| `422` | `"No form data provided."` — request body is empty |
+| `422` | Validation error from the form mapping (returned via `message`) |
+| `500` | `"Form submission failed."` |
