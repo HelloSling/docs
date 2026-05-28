@@ -19,6 +19,21 @@ curl --request GET \
   --header 'Authorization: Bearer {API_TOKEN}'
 ```
 
+```json
+{
+  "status": "success",
+  "groups": [
+    {
+      "id": 42,
+      "name": "Lagos Customers",
+      "identifier": "lagos-customers",
+      "description": "Customers based in Lagos",
+      "contacts_count": 5
+    }
+  ]
+}
+```
+
 ## Get contacts in a group
 
 Retrieve all contacts belonging to a specific group. Replace `{groupid}` with the numeric ID of the group.
@@ -32,7 +47,7 @@ curl --request GET \
 
 ## Create a group
 
-Create a new contact group by providing a name.
+Create a new contact group by providing a name, and optionally an identifier and description.
 
 ```bash
 curl --request POST \
@@ -41,7 +56,9 @@ curl --request POST \
   --header 'Authorization: Bearer {API_TOKEN}' \
   --header 'Content-Type: application/json' \
   --data '{
-    "name": "Lagos Customers"
+    "name": "Lagos Customers",
+    "identifier": "lagos-customers",
+    "description": "Customers based in Lagos"
   }'
 ```
 
@@ -49,6 +66,14 @@ curl --request POST \
 
 <ParamField body="name" type="string" required>
   Display name for the new group.
+</ParamField>
+
+<ParamField body="identifier" type="string">
+  A unique identifier for the group.
+</ParamField>
+
+<ParamField body="description" type="string">
+  A short description of the group.
 </ParamField>
 
 ## Add a single contact
