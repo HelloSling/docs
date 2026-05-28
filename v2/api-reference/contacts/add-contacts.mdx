@@ -33,12 +33,46 @@ POST https://app.sling.com.ng/api/v2/add-contacts
     <ParamField body="email" type="string">
       Contact email address.
     </ParamField>
+    <ParamField body="group_id" type="string">
+      Group ID or group `identifier` to assign this contact. Leave empty or use `0` for standalone.
+    </ParamField>
+    <ParamField body="identifier" type="string">
+      Optional identifier for the contact.
+    </ParamField>
+    <ParamField body="description" type="string">
+      Description for the contact.
+    </ParamField>
   </Expandable>
 </ParamField>
 
 <ParamField body="group_id" type="string">
-  Group ID to assign all contacts to.
+  Optional fallback group ID or group `identifier` to assign all contacts to.
 </ParamField>
+
+### Example payload
+
+```json
+{
+  "contacts": [
+    {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "phone": "1234567891",
+      "group_id": "lagos-customers",
+      "identifier": "john-doe",
+      "description": "VIP customer"
+    },
+    {
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "phone": "0987654321",
+      "group_id": 0,
+      "identifier": "jane-smith",
+      "description": "Standalone contact"
+    }
+  ]
+}
+```
 
 ## Response
 

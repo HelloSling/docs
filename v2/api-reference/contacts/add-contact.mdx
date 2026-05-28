@@ -33,7 +33,15 @@ POST https://app.sling.com.ng/api/v2/add-contact
 </ParamField>
 
 <ParamField body="group_id" type="string">
-  Group ID to assign the contact to.
+  Group ID or group `identifier` to assign the contact to. Leave empty or use `0` for standalone.
+</ParamField>
+
+<ParamField body="identifier" type="string">
+  Optional identifier for the contact.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Description for the contact.
 </ParamField>
 
 ## Response
@@ -45,6 +53,15 @@ Contacts endpoints return `status: "success"` when the operation completes.
 ```json
 {
   "status": "success",
-  "contact_id": 123
+  "details": "Contact has been added successfully",
+  "data": {
+    "id": 156,
+    "name": "HIIIII",
+    "phone": "0903344",
+    "email": "HII@gm.d",
+    "identifier": null,
+    "description": null,
+    "created_at": "2026-05-28T11:50:25.000000Z"
+  }
 }
 ```
