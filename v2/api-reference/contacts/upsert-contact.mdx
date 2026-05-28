@@ -1,0 +1,91 @@
+---
+title: "POST /upsert-contact"
+sidebarTitle: "Upsert contact"
+description: "POST /api/v2/upsert-contact - Create or update a contact by identifier."
+---
+
+Create a contact if the `identifier` does not exist, or update the existing contact when it does.
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v2/upsert-contact
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` |
+
+## Body parameters
+
+<ParamField body="identifier" type="string" required>
+  Unique identifier for the contact. Used to match an existing record for update.
+</ParamField>
+
+<ParamField body="group" type="string" required>
+  Group ID or group `identifier` to assign the contact to.
+</ParamField>
+
+<ParamField body="name" type="string" required>
+  Contact name.
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  Contact email address.
+</ParamField>
+
+<ParamField body="phone" type="string" required>
+  Contact phone number.
+</ParamField>
+
+### Example payload
+
+```json
+{
+  "identifier": "john-doe-001",
+  "group": "vip-customers",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "08031234567"
+}
+```
+
+## Response
+
+### Success Response
+
+Contacts endpoints return `status: "success"` when the operation completes. The `details` field indicates whether the contact was created or updated:
+
+- `Contact created successfully`
+- `Contact updated successfully`
+
+```json
+{
+  "status": "success",
+  "details": "Contact updated successfully",
+  "data": {
+    "id": 159,
+    "name": "HIIIII",
+    "first_name": null,
+    "last_name": null,
+    "email": "HII@gm.d",
+    "phone": "0903344",
+    "identifier": "1234564",
+    "description": "dddd1",
+    "group": {
+      "id": 1,
+      "name": "Sling",
+      "identifier": null,
+      "description": null,
+      "created_at": "2025-04-17T05:45:53.000000Z",
+      "updated_at": "2025-04-17T23:11:56.000000Z"
+    },
+    "created_at": "2026-05-28T15:32:13.000000Z",
+    "updated_at": "2026-05-28T15:32:24.000000Z"
+  }
+}
+```

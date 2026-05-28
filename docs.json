@@ -88,7 +88,8 @@
                   "v1/api-reference/contacts/create-group",
                   "v1/api-reference/contacts/add-contact",
                   "v1/api-reference/contacts/add-contacts",
-                  "v1/api-reference/contacts/update-contact"
+                  "v1/api-reference/contacts/update-contact",
+                  "v1/api-reference/contacts/upsert-contact"
                 ]
               },
               {
@@ -168,7 +169,8 @@
                   "v2/api-reference/contacts/create-group",
                   "v2/api-reference/contacts/add-contact",
                   "v2/api-reference/contacts/add-contacts",
-                  "v2/api-reference/contacts/update-contact"
+                  "v2/api-reference/contacts/update-contact",
+                  "v2/api-reference/contacts/upsert-contact"
                 ]
               },
               {
