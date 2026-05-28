@@ -33,7 +33,15 @@ POST https://app.sling.com.ng/api/v1/add-contact
 </ParamField>
 
 <ParamField body="group_id" type="string">
-  Group ID or group `identifier` to assign the contact to.
+  Group ID or group `identifier` to assign the contact to. Leave empty or use `0` for standalone.
+</ParamField>
+
+<ParamField body="identifier" type="string">
+  Optional identifier for the contact.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Description for the contact.
 </ParamField>
 
 ## Response
