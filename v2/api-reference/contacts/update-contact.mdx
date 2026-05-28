@@ -1,0 +1,55 @@
+---
+title: "POST /update-contact/{contactid}"
+sidebarTitle: "Update contact"
+description: "POST /api/v2/update-contact/{contactid} - Update contact's name, phone, email, or group assignment."
+---
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v2/update-contact/{contactid}
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` |
+
+## Path parameters
+
+<ParamField path="contactid" type="string" required>
+  Contact ID.
+</ParamField>
+
+## Body parameters
+
+<ParamField body="name" type="string">
+  Updated contact name.
+</ParamField>
+
+<ParamField body="phone" type="string">
+  Updated contact phone number.
+</ParamField>
+
+<ParamField body="email" type="string">
+  Updated contact email address.
+</ParamField>
+
+<ParamField body="group_id" type="string">
+  Group ID to assign the contact to.
+</ParamField>
+
+## Response
+
+### Success Response
+
+Contacts endpoints return `status: "success"` when the operation completes.
+
+```json
+{
+  "status": "success"
+}
+```

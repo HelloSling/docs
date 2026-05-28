@@ -1,0 +1,50 @@
+---
+title: "POST /add-contact"
+sidebarTitle: "Add contact"
+description: "POST /api/v2/add-contact - Add a single contact with optional email support."
+---
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v2/add-contact
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` |
+
+## Body parameters
+
+<ParamField body="name" type="string" required>
+  Contact name.
+</ParamField>
+
+<ParamField body="phone" type="string" required>
+  Contact phone number.
+</ParamField>
+
+<ParamField body="email" type="string">
+  Contact email address. Used by the Email channel.
+</ParamField>
+
+<ParamField body="group_id" type="string">
+  Group ID to assign the contact to.
+</ParamField>
+
+## Response
+
+### Success Response
+
+Contacts endpoints return `status: "success"` when the operation completes.
+
+```json
+{
+  "status": "success",
+  "contact_id": 123
+}
+```

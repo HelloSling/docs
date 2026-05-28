@@ -1,0 +1,39 @@
+---
+title: "GET /groups"
+sidebarTitle: "List groups"
+description: "GET /api/v1/groups - Retrieve contact groups in your account."
+---
+
+## Endpoint
+
+```bash
+GET https://app.sling.com.ng/api/v1/groups
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+
+## Response
+
+Returns the groups in your account.
+
+### Success Response
+
+Contacts endpoints return `status: "success"` when the operation completes.
+
+```json
+{
+  "status": "success",
+  "groups": [
+    {
+      "id": 42,
+      "name": "Lagos Customers",
+      "contacts_count": 5
+    }
+  ]
+}
+```

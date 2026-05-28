@@ -1,0 +1,54 @@
+---
+title: "POST /add-contacts"
+sidebarTitle: "Add multiple contacts"
+description: "POST /api/v2/add-contacts - Add multiple contacts in bulk with optional email support."
+---
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v2/add-contacts
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` |
+
+## Body parameters
+
+<ParamField body="contacts" type="array" required>
+  Contact objects to create.
+
+  <Expandable title="contact object properties">
+    <ParamField body="name" type="string" required>
+      Contact name.
+    </ParamField>
+    <ParamField body="phone" type="string" required>
+      Contact phone number.
+    </ParamField>
+    <ParamField body="email" type="string">
+      Contact email address.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="group_id" type="string">
+  Group ID to assign all contacts to.
+</ParamField>
+
+## Response
+
+### Success Response
+
+Contacts endpoints return `status: "success"` when the operation completes.
+
+```json
+{
+  "status": "success",
+  "contacts_count": 2
+}
+```

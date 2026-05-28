@@ -1,0 +1,41 @@
+---
+title: "GET /groups"
+sidebarTitle: "List groups"
+description: "GET /api/v2/groups - Retrieve contact groups in your account."
+---
+
+Manage groups and contacts so you can target lists with one send call. Group and contact IDs returned here can be used as `group`, `groups[]`, `contact`, or `contacts[]` on any [send endpoint](/v2/api-reference/send).
+
+## Endpoint
+
+```bash
+GET https://app.sling.com.ng/api/v2/groups
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+
+## Response
+
+Returns the contact groups in your account.
+
+### Success Response
+
+Contacts endpoints return `status: "success"` when the operation completes.
+
+```json
+{
+  "status": "success",
+  "groups": [
+    {
+      "id": 42,
+      "name": "Lagos Customers",
+      "contacts_count": 5
+    }
+  ]
+}
+```

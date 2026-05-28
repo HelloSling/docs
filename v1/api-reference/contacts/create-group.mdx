@@ -1,0 +1,38 @@
+---
+title: "POST /create-group"
+sidebarTitle: "Create group"
+description: "POST /api/v1/create-group - Create a contact group."
+---
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v1/create-group
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` |
+
+## Body parameters
+
+<ParamField body="name" type="string" required>
+  Group name.
+</ParamField>
+
+## Response
+
+### Success Response
+
+Contacts endpoints return `status: "success"` when the operation completes.
+
+```json
+{
+  "status": "success",
+  "group_id": 42
+}
+```

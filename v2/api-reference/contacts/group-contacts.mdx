@@ -1,0 +1,46 @@
+---
+title: "GET /group-contacts/{groupid}"
+sidebarTitle: "List group contacts"
+description: "GET /api/v2/group-contacts/{groupid} - List contacts assigned to a specific group."
+---
+
+## Endpoint
+
+```bash
+GET https://app.sling.com.ng/api/v2/group-contacts/{groupid}
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+
+## Path parameters
+
+<ParamField path="groupid" type="string" required>
+  Group ID. Use `0` or `standalone` for ungrouped contacts.
+</ParamField>
+
+## Response
+
+Returns contacts assigned to the group.
+
+### Success Response
+
+Contacts endpoints return `status: "success"` when the operation completes.
+
+```json
+{
+  "status": "success",
+  "contacts": [
+    {
+      "id": 123,
+      "name": "Amaka Obi",
+      "phone": "2348012345678",
+      "email": "amaka@example.com"
+    }
+  ]
+}
+```
