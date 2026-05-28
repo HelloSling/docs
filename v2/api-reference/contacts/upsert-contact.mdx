@@ -6,6 +6,10 @@ description: "POST /api/v2/upsert-contact - Create or update a contact by identi
 
 Create a contact if the `identifier` does not exist, or update the existing contact when it does.
 
+<Note>
+  When a group ID or group `identifier` is passed in `group`, the upsert only creates or updates a contact with that `identifier` **within that group**. If a contact with the same `identifier` already exists in a different group, it is not updated.
+</Note>
+
 ## Endpoint
 
 ```bash
@@ -27,7 +31,7 @@ POST https://app.sling.com.ng/api/v2/upsert-contact
 </ParamField>
 
 <ParamField body="group" type="string" required>
-  Group ID or group `identifier` to assign the contact to.
+  Group ID or group `identifier` to assign the contact to. Use `0` for standalone.
 </ParamField>
 
 <ParamField body="name" type="string" required>
