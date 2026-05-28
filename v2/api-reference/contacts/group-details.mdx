@@ -1,0 +1,48 @@
+---
+title: "GET /group/{id}"
+sidebarTitle: "Get group details"
+description: "GET /api/v2/group/{id} - Fetch details for a single contact group."
+---
+
+## Endpoint
+
+```bash
+GET https://app.sling.com.ng/api/v2/group/{id}
+```
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+
+## Path parameters
+
+<ParamField path="id" type="string" required>
+  Group ID or group `identifier`.
+</ParamField>
+
+## Response
+
+Returns details for the requested group.
+
+### Success Response
+
+Contacts endpoints return `status: "success"` when the operation completes.
+
+```json
+{
+  "status": "success",
+  "details": "Group fetched",
+  "data": {
+    "id": 1,
+    "name": "Sling",
+    "identifier": null,
+    "description": null,
+    "contacts_count": 68,
+    "created_at": "2025-04-17T05:45:53.000000Z",
+    "updated_at": "2025-04-17T23:11:56.000000Z"
+  }
+}
+```
