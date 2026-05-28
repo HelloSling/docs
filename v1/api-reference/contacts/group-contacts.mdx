@@ -34,12 +34,33 @@ Contacts endpoints return `status: "success"` when the operation completes.
 ```json
 {
   "status": "success",
-  "contacts": [
-    {
-      "id": 123,
-      "name": "Amaka Obi",
-      "phone": "2348012345678"
-    }
-  ]
+  "details": "Group Contacts fetched",
+  "data": {
+    "current_page": 1,
+    "data": [
+      {
+        "id": 12,
+        "name": "Contact 4",
+        "email": null,
+        "phone": "09033776357"
+      },
+      {
+        "id": 54,
+        "name": "John Doe",
+        "email": "john@example.com",
+        "phone": "1234567891"
+      }
+    ],
+    "first_page_url": "https://app.sling.com.ng/api/v1/group-contacts/1?page=1",
+    "from": 1,
+    "last_page": 2,
+    "last_page_url": "https://app.sling.com.ng/api/v1/group-contacts/1?page=2",
+    "next_page_url": "https://app.sling.com.ng/api/v1/group-contacts/1?page=2",
+    "path": "https://app.sling.com.ng/api/v1/group-contacts/1",
+    "per_page": 50,
+    "prev_page_url": null,
+    "to": 50,
+    "total": 68
+  }
 }
 ```
