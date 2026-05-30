@@ -50,6 +50,14 @@ curl --request POST \
   Controls delivery mode. See the section below for the difference between `true` and `false`.
 </ParamField>
 
+<ParamField body="fallback_sms" type="boolean">
+  When `true`, Sling falls back to SMS if the message cannot be delivered over Truecaller.
+</ParamField>
+
+<ParamField body="fallback_sms_sender" type="string">
+  Sender ID used for the SMS fallback when `fallback_sms` is `true`. For example, `Sling` while your Truecaller `sender` is `Brand`.
+</ParamField>
+
 <ParamField body="contact" type="string">
   The ID of a saved contact from your Sling contact list. Use instead of `to`.
 </ParamField>
@@ -94,6 +102,23 @@ The `instant` parameter controls whether Sling processes the message synchronous
     ```
   </Tab>
 </Tabs>
+
+## SMS fallback
+
+<Note>
+  Set `fallback_sms` to `true` and Sling will re-send the message as a standard SMS if delivery over Truecaller is not possible. Use `fallback_sms_sender` to set the SMS Sender ID for that fallback (for example, `Sling` when your Truecaller `sender` is `Brand`).
+</Note>
+
+```json
+{
+  "sender": "Brand",
+  "to": "08140363233",
+  "message": "Hello from Truecaller",
+  "type": "transactional",
+  "fallback_sms": true,
+  "fallback_sms_sender": "Sling"
+}
+```
 
 ## Responses
 

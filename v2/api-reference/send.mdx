@@ -88,6 +88,8 @@ The universal send endpoint routes the request to the channel handler based on t
 
 When `channel` is `rcs`, include RCS fields such as `template_type`, `standalone`, `carousel`, `suggestions`, `fallback_sms`, and `fallback_sms_sender`. Use `fallback_sms_sender` to set the SMS Sender ID for fallback delivery (for example, `Sling` while `sender` is `RCS`).
 
+When `channel` is `truecaller`, you can also use `fallback_sms` and `fallback_sms_sender` to deliver as SMS when Truecaller delivery is not possible (for example, `Sling` while `sender` is `Brand`).
+
 For full RCS, Truecaller, WhatsApp, and Email payloads, see the channel-specific reference pages:
 
 - [/send-sms](/v2/api-reference/send-sms)
