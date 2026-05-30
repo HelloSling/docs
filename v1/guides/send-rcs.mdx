@@ -181,8 +181,20 @@ Choose the `template_type` that matches the experience you want to deliver. Each
 ## SMS fallback
 
 <Note>
-  Set `fallback_sms` to `true` in any request body and Sling will automatically re-send the message as a standard SMS if the recipient's device or network provider does not support RCS. This ensures delivery without requiring you to implement your own fallback logic.
+  Set `fallback_sms` to `true` in any request body and Sling will automatically re-send the message as a standard SMS if the recipient's device or network provider does not support RCS. Use `fallback_sms_sender` to set the SMS Sender ID for that fallback (for example, `Sling` when your RCS `sender` is `RCS`).
 </Note>
+
+```json
+{
+  "sender": "RCS",
+  "to": "08140363541",
+  "message": "Hello from Sling",
+  "type": "transactional",
+  "template_type": "text",
+  "fallback_sms": true,
+  "fallback_sms_sender": "Sling"
+}
+```
 
 ## Responses
 

@@ -18,7 +18,7 @@ Sling API v2 is the multi-channel messaging API. You authenticate once with a be
 ## What Sling offers
 
 - **SMS** — Transactional, promotional, and OTP text messages.
-- **RCS** — Rich messages with cards, carousels, images, and interactive suggestion chips.
+- **RCS** — Rich messages with cards, carousels, images, and interactive suggestion chips. Set `fallback_sms` to deliver as SMS when RCS is unavailable, and `fallback_sms_sender` for the SMS Sender ID (for example, `Sling` while `sender` is `RCS`).
 - **Truecaller messaging** — Branded, verified messages delivered through Truecaller.
 - **WhatsApp** — Business messaging through approved WhatsApp sender IDs.
 - **Email** — Transactional and promotional email through Sling's email channel.

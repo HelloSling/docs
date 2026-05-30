@@ -44,6 +44,10 @@ POST https://app.sling.com.ng/api/v1/send-rcs
   When `true`, Sling falls back to SMS if the recipient does not support RCS.
 </ParamField>
 
+<ParamField body="fallback_sms_sender" type="string">
+  Sender ID used for the SMS fallback when `fallback_sms` is `true`. For example, `Sling` while your RCS `sender` is `RCS`.
+</ParamField>
+
 <ParamField body="suggestions" type="array">
   Interactive suggestion chip objects. See [RCS Suggestions](/v1/api-reference/rcs-suggestions).
 </ParamField>
