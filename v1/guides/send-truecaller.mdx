@@ -27,7 +27,7 @@ curl --request POST \
 ## Parameters
 
 <ParamField body="to" type="string" required>
-  Recipient phone number. Accepts 11-digit local format (`08012345678`), country code without plus (`2348012345678`), or with plus (`+2348012345678`). Required unless `contact` or `group` is provided.
+  Recipient phone number. Accepts local format (without country code, where applicable), country code without `+`, or E.164 with `+` prefix — for example `08012345678`, `2348012345678`, `+2348012345678`, or `+14155552671`. Required unless `contact` or `group` is provided.
 </ParamField>
 
 <ParamField body="message" type="string" required>

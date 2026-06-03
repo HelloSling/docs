@@ -59,7 +59,7 @@ POST https://app.sling.com.ng/api/v2/send-truecaller
 ### Recipient (provide exactly one)
 
 <ParamField body="to" type="string">
-  Recipient phone number.
+  Recipient phone number. Accepts local format (without country code, where applicable), country code without `+`, or E.164 with `+` prefix — for example `08012345678`, `2348012345678`, `+2348012345678`, or `+14155552671`.
 </ParamField>
 
 <ParamField body="contact" type="string">
