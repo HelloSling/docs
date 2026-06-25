@@ -40,6 +40,10 @@ POST https://app.sling.com.ng/api/v2/send-truecaller
   When `true`, the request waits for immediate processing and the response includes the resolved `status` and `credit_used`. When `false`, the message is queued.
 </ParamField>
 
+<ParamField body="ttl" type="integer">
+  Time-to-live in seconds. If the recipient is not online or active on Truecaller within this window, the message expires and is not delivered. For example, `300` expires the message after 5 minutes.
+</ParamField>
+
 <ParamField body="fallback_sms" type="boolean" default="false">
   When `true`, Sling falls back to SMS if the message cannot be delivered over Truecaller.
 </ParamField>
@@ -81,6 +85,22 @@ POST https://app.sling.com.ng/api/v2/send-truecaller
 <ParamField body="numbers" type="string">
   Newline-separated raw phone numbers.
 </ParamField>
+
+## Message expiry
+
+<Note>
+  Set `ttl` to limit how long Sling keeps trying to deliver a Truecaller message. The value is in seconds — for example, `300` gives the recipient 5 minutes to come online. If they are not online or active on Truecaller before the window ends, the message expires and is not delivered.
+</Note>
+
+```json
+{
+  "sender": "Brand",
+  "to": "08140363233",
+  "message": "Your OTP is 482910",
+  "type": "transactional",
+  "ttl": 300
+}
+```
 
 ## SMS fallback
 
