@@ -69,6 +69,7 @@
                   "v1/api-reference/send-sms",
                   "v1/api-reference/send-rcs",
                   "v1/api-reference/send-truecaller",
+                  "v1/api-reference/send-email",
                   "v1/api-reference/message-status"
                 ]
               },

@@ -1,0 +1,110 @@
+---
+title: "POST /send-email"
+sidebarTitle: "/send-email"
+description: "POST /api/v1/send-email - Send a transactional or promotional email through the Sling email channel."
+---
+
+## Endpoint
+
+```bash
+POST https://app.sling.com.ng/api/v1/send-email
+```
+
+The recipient on this endpoint is an email address rather than a phone number. Provide the address through `to`, or target saved contacts through `contact` or `group`.
+
+## Headers
+
+| Header | Value |
+| --- | --- |
+| `Accept` | `application/json` |
+| `Authorization` | `Bearer {API_TOKEN}` |
+| `Content-Type` | `application/json` |
+
+## Body parameters
+
+<ParamField body="sender" type="string" required>
+  Approved email Sender ID (the `from` address registered for your account).
+</ParamField>
+
+<ParamField body="subject" type="string" required>
+  Email subject line.
+</ParamField>
+
+<ParamField body="message" type="string" required>
+  Plain-text email body.
+</ParamField>
+
+<ParamField body="html" type="string">
+  HTML email body. When provided, recipients see the HTML version where supported.
+</ParamField>
+
+<ParamField body="type" type="string">
+  Sender ID route. Accepted values: `transactional`, `promotional`, `otp`. Defaults to `transactional`.
+</ParamField>
+
+<ParamField body="callback" type="string">
+  Public HTTPS URL that receives delivery updates.
+</ParamField>
+
+<ParamField body="to" type="string">
+  Recipient email address. Use instead of `contact` or `group`.
+</ParamField>
+
+<ParamField body="contact" type="string">
+  Saved contact ID. The contact must have an `email` set. Use instead of `to`.
+</ParamField>
+
+<ParamField body="group" type="string">
+  Contact group ID. Use instead of `to`.
+</ParamField>
+
+## URL parameters
+
+This endpoint also supports URL-based sending with `api_token`, `to`, `subject`, `message`, and `sender` as query parameters.
+
+```bash
+https://app.sling.com.ng/api/v1/send-email?api_token=YOUR_API_TOKEN&to=user@example.com&subject=Hello&message=Welcome&sender=hello@yourdomain.com
+```
+
+## Response fields
+
+<ResponseField name="status" type="string">
+  `"success"` when the message is accepted.
+</ResponseField>
+
+<ResponseField name="status_delivery" type="string">
+  Delivery state, such as `"delivered"`, `"pending"`, or `"failed"`.
+</ResponseField>
+
+<ResponseField name="message_id" type="string">
+  Unique message ID. Use it with [Message Status](/v1/api-reference/message-status).
+</ResponseField>
+
+<ResponseField name="sender" type="string">
+  Sender used for delivery.
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Message text.
+</ResponseField>
+
+<ResponseField name="recipient" type="string">
+  Recipient email address.
+</ResponseField>
+
+<ResponseField name="message_history" type="array">
+  Prior delivery attempts for the message.
+</ResponseField>
+
+<ResponseField name="credit_used" type="number">
+  Credits deducted for this message.
+</ResponseField>
+
+## Error responses
+
+| Status | Meaning |
+| --- | --- |
+| `400` | Missing or invalid request fields |
+| `400` | Insufficient credit |
+| `400` | Sender not approved for Email |
+| `400` | Contact has no email address |
